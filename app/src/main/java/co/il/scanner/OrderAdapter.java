@@ -41,7 +41,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.mItemName.setText(String.valueOf(mOrdersItems.get(position).getId()));
+        holder.mItemName.setText(String.valueOf(mOrdersItems.get(position).getItem().getName()));
 
         int itemCollectedQuantity = mOrdersItems.get(position).getCollectedQuantity();
         int itemOrderQuantity = mOrdersItems.get(position).getOrderQuantity();

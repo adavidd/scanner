@@ -8,7 +8,7 @@ public class OrderItemsItem{
 	private Object foreignId;
 
 	@SerializedName("item")
-	private String item;
+	private Item item;
 
 	@SerializedName("comments")
 	private Object comments;
@@ -31,75 +31,86 @@ public class OrderItemsItem{
 	@SerializedName("collected_quantity")
 	private int collectedQuantity;
 
-	public void setForeignId(Object foreignId){
-		this.foreignId = foreignId;
-	}
+	@SerializedName("collected_at")
+	private Object collectedAt;
 
 	public Object getForeignId(){
 		return foreignId;
 	}
 
-	public void setItem(String item){
-		this.item = item;
-	}
-
-	public String getItem(){
+	public Item getItem(){
 		return item;
-	}
-
-	public void setComments(Object comments){
-		this.comments = comments;
 	}
 
 	public Object getComments(){
 		return comments;
 	}
 
-	public void setDeleted(boolean deleted){
-		this.deleted = deleted;
-	}
-
 	public boolean isDeleted(){
 		return deleted;
-	}
-
-	public void setItemId(int itemId){
-		this.itemId = itemId;
 	}
 
 	public int getItemId(){
 		return itemId;
 	}
 
-	public void setOrderQuantity(int orderQuantity){
-		this.orderQuantity = orderQuantity;
-	}
-
 	public int getOrderQuantity(){
 		return orderQuantity;
 	}
 
-	public void setId(int id){
+	public void setForeignId(Object foreignId) {
+		this.foreignId = foreignId;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
+	public void setComments(Object comments) {
+		this.comments = comments;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public void setItemId(int itemId) {
+		this.itemId = itemId;
+	}
+
+	public void setOrderQuantity(int orderQuantity) {
+		this.orderQuantity = orderQuantity;
+	}
+
+	public void setId(int id) {
 		this.id = id;
+	}
+
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
+	}
+
+	public void setCollectedQuantity(int collectedQuantity) {
+		this.collectedQuantity = collectedQuantity;
+	}
+
+	public void setCollectedAt(Object collectedAt) {
+		this.collectedAt = collectedAt;
 	}
 
 	public int getId(){
 		return id;
 	}
 
-	public void setOrderId(int orderId){
-		this.orderId = orderId;
-	}
-
 	public int getOrderId(){
 		return orderId;
 	}
 
-	public void setCollectedQuantity(int collectedQuantity){
-		this.collectedQuantity = collectedQuantity;
-	}
-
 	public int getCollectedQuantity(){
 		return collectedQuantity;
+	}
+
+	public Object getCollectedAt(){
+		return collectedAt;
 	}
 }
