@@ -137,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             @Override
             public void onNext(@NonNull Orders orders) {
 
-                orders.getOrderItems().get(1).setItem("6910139800270");
                 initRecyclerView(orders);
                 mProgressBar.setVisibility(View.GONE);
 
@@ -223,14 +222,18 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
     private void checkIfBarcodeExist(String barcodeStr) {
 
-        for (int i = 0; i < mOrdersList.size(); i++) {
+        if (mOrdersList != null){
 
-            if (mOrdersList.get(i).getItem().equals(barcodeStr)) {
+            for (int i = 0; i < mOrdersList.size(); i++) {
 
-                mOrdersList.get(i).setCollectedQuantity(mOrdersList.get(i).getCollectedQuantity() + 1);
-                break;
+                if (mOrdersList.get(i).getItem().getBarcode1().equals(barcodeStr)) {
+
+                    mOrdersList.get(i).setCollectedQuantity(mOrdersList.get(i).getCollectedQuantity() + 1);
+                    mOrderAdapter.notifyDataSetChanged();
+                    break;
+                }
+
             }
-
         }
 
 

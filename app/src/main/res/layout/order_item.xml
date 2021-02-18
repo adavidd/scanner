@@ -34,7 +34,7 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="4"
@@ -46,11 +46,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
+            android:layout_centerInParent="true"
             android:gravity="center"
             android:layout_gravity="center"
             tools:text="ספר קודש"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 
