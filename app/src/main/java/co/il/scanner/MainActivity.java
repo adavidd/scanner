@@ -252,23 +252,32 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
                 if (mOrdersList.get(i).getItem().getBarcode1().equals(barcodeStr) || mOrdersList.get(i).getItem().getBarcode2().equals(barcodeStr)) {
                     itemMatched = true;
-                    mOrdersList.get(i).setCollectedQuantity(mOrdersList.get(i).getCollectedQuantity() + 1);
-                    mOrderAdapter.notifyDataSetChanged();
-                    blink(Color.GREEN);
+                    if(mOrdersList.get(i).getOrderQuantity()<=mOrdersList.get(i).getCollectedQuantity()){
+                        blink(Color.RED);
+                        vibrate(2000);
+                    }else {
+                        mOrdersList.get(i).setCollectedQuantity(mOrdersList.get(i).getCollectedQuantity() + 1);
+                        mOrderAdapter.notifyDataSetChanged();
+                        blink(Color.GREEN);
+
+                    }
                     break;
                 }
 
 
             }
             if(!itemMatched){
-                Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-                v.vibrate(500);
-                blink(Color.RED);
+                vibrate(500);
             }
         }
 
 
 
+    }
+    private  void vibrate(int ms){
+        Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(ms);
+        blink(Color.RED);
     }
     private void blink(int c){
         final LinearLayout layout = (LinearLayout) findViewById(R.id.MA_recycler_linear_LL);
