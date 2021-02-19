@@ -46,8 +46,9 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     private RecyclerView mRecyclerView;
     private OrderAdapter mOrderAdapter;
     private LoginUser mLoginUser;
-    private final static String SCAN_ACTION_RCV = "com.rcv.message";
+    private final static String SCAN_ACTION_RCV = "scan.rcv.message";
     private final static String SCAN_ACTION_ZKC = "com.zkc.scancode";
+
     String barcodeStr = "";
     private LottieAnimationView mScanning;
     boolean isScanning = false;
