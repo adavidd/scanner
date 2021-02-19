@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -20,16 +22,15 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 
-import java.io.Serializable;
 import java.util.List;
 
 
-import co.il.scanner.login.LoginListAdapter;
 import co.il.scanner.model.LoginUser;
 import co.il.scanner.model.OrderItemsItem;
 import co.il.scanner.model.Orders;
@@ -56,6 +57,10 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     private LinearLayout mRecyclerLinear;
     private TextView mClientText;
     private List<OrderItemsItem> mOrdersList;
+    private Dialog clientDetailsDialog;
+    private Orders mOrders;
+    private RelativeLayout mClientboxRL;
+    private LinearLayout mHandScanLL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         initViews();
         initListeners();
         initScannerReceiver();
+
     }
 
 
@@ -78,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         mProgressBar = findViewById(R.id.MA_progress_bar_PB);
         mRecyclerLinear = findViewById(R.id.MA_recycler_linear_LL);
         mClientText = findViewById(R.id.MA_client_text_TV);
+        mClientboxRL = findViewById(R.id.AM_client_box_RL);
+        mHandScanLL = findViewById(R.id.MA_hand_scann_LL);
 
 
         Toast.makeText(this, "שלום " + mLoginUser.getFirstname(), Toast.LENGTH_SHORT).show();
@@ -88,8 +96,8 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
         mRecyclerLinear.setVisibility(View.VISIBLE);
 
-        String clientName = orders.getCustomer().getFirstname1() + " " + orders.getCustomer().getLastname();
-        mClientText.setText(clientName);
+        String clientNumber = orders.getCustomer().getTz1();
+        mClientText.setText(clientNumber);
 
         mOrdersList = orders.getOrderItems();
 
@@ -105,8 +113,21 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     public void onBackPressed() {
 
         if (mRecyclerLinear.getVisibility() == View.VISIBLE) {
-            mRecyclerLinear.setVisibility(View.GONE);
-            mStartButton.setVisibility(View.VISIBLE);
+
+
+            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+            alertDialog.setTitle("סגירה?");
+            alertDialog.setMessage("אתה בטוח שאתה רוצה לצאת מההזמנה?");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "כן",
+                    (dialog, which) -> {
+                        dialog.dismiss();
+                        mRecyclerLinear.setVisibility(View.GONE);
+                        mStartButton.setVisibility(View.VISIBLE);
+                    });
+
+            alertDialog.show();
+
+
 
         } else {
 
@@ -118,19 +139,31 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
     private void initListeners() {
 
-        mStartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        mStartButton.setOnClickListener(view -> {
 
-                mProgressBar.setVisibility(View.VISIBLE);
-                mStartButton.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.VISIBLE);
+            mStartButton.setVisibility(View.GONE);
 
-                getOrdersFromServer();
+            getOrdersFromServer();
 
 
-            }
         });
 
+
+        mClientboxRL.setOnClickListener(view -> {
+
+
+            ClientDialog clientDialog = new ClientDialog();
+            clientDialog.showDialog(this, mOrders);
+
+        });
+
+
+        mHandScanLL.setOnClickListener(view -> {
+
+            HandScanDialog handScanDialog = new HandScanDialog();
+            handScanDialog.showDialog(MainActivity.this);
+        });
 
     }
 
@@ -146,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             @Override
             public void onNext(@NonNull Orders orders) {
 
-                orders.getOrderItems().get(1).getItem().setBarcode1("6910139800270");
+                mOrders = orders;
                 initRecyclerView(orders);
                 mProgressBar.setVisibility(View.GONE);
 

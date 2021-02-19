@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_gravity="center"
+    android:background="@drawable/rounded_corner_dialog"
+    android:layout_height="200dp">
+
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/barcode"/>
+
+    <EditText
+        android:id="@+id/HSD_detiles_ET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:textSize="23sp"
+        android:inputType="number"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>
