@@ -11,32 +11,84 @@
         android:id="@+id/MA_recycler_linear_LL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <RelativeLayout
+            android:id="@+id/AM_client_box_RL"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/teal_200"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@color/teal_200">
 
             <TextView
                 android:id="@+id/MA_client_text_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:layout_centerInParent="true"
                 android:textColor="@color/white"
-                android:layout_centerInParent="true"/>
+                android:textSize="20sp" />
 
 
         </RelativeLayout>
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/MA_recycler_RV"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="7"/>
+            android:layout_weight="7">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/MA_recycler_RV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+            <LinearLayout
+                android:id="@+id/MA_hand_scann_LL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:background="@color/cardview_shadow_start_color"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/barcode" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="סרוק ידנית"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            android:id="@+id/AM_save_RL"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/teal_200">
+
+            <TextView
+                android:id="@+id/MA_save_text_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@color/white"
+                android:text="סיים הזמנה"
+                android:textSize="20sp" />
+
+
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -44,9 +96,9 @@
         android:id="@+id/MA_start_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="35sp"
         android:layout_centerInParent="true"
-        android:text="התחל הזמנה"/>
+        android:text="התחל הזמנה"
+        android:textSize="35sp" />
 
 
     <com.airbnb.lottie.LottieAnimationView
@@ -54,10 +106,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        app:lottie_rawRes="@raw/scanning2"
         android:visibility="gone"
         app:lottie_autoPlay="false"
-        app:lottie_loop="true"/>
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/scanning2" />
 
 
     <ProgressBar
