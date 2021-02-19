@@ -145,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             @Override
             public void onNext(@NonNull Orders orders) {
 
+                orders.getOrderItems().get(1).getItem().setBarcode1("6910139800270");
                 initRecyclerView(orders);
                 mProgressBar.setVisibility(View.GONE);
 
@@ -217,17 +218,16 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                 Toast.makeText(context, barcodeStr, Toast.LENGTH_SHORT).show();
             }
         };
+        
+
         BroadcastReceiver broadcastReceiver1 = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
 
 
-                    barcodeStr = intent.getExtras().getString("code");
-
+                barcodeStr = intent.getExtras().getString("code");
                 mScanning.cancelAnimation();
-
                 checkIfBarcodeExist(barcodeStr);
-
                 Toast.makeText(context, barcodeStr, Toast.LENGTH_SHORT).show();
             }
         };
@@ -252,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
                 if (mOrdersList.get(i).getItem().getBarcode1().equals(barcodeStr) || mOrdersList.get(i).getItem().getBarcode2().equals(barcodeStr)) {
                     itemMatched = true;
-                    if(mOrdersList.get(i).getOrderQuantity()<=mOrdersList.get(i).getCollectedQuantity()){
+                    if(mOrdersList.get(i).getOrderQuantity() <= mOrdersList.get(i).getCollectedQuantity()){
                         blink(Color.RED);
                         vibrate(2000);
                     }else {
@@ -279,6 +279,8 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         v.vibrate(ms);
         blink(Color.RED);
     }
+
+
     private void blink(int c){
         final LinearLayout layout = (LinearLayout) findViewById(R.id.MA_recycler_linear_LL);
         final AnimationDrawable drawable = new AnimationDrawable();
