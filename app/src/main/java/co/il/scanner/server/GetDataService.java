@@ -32,7 +32,7 @@ public interface GetDataService {
     @POST("/api/orders/updateItemCollection")
     Observable<Status> updateItemCollection(@Body UpdateItem updateItem);
 
-    @POST("/api/updateCompleteOrderCollection")
+    @POST("/api/orders/updateCompleteOrderCollection")
     Observable<Status> updateCompleteOrderCollection(@Body CompleteOrder completeOrder);
 
     @POST("/api/processPayment")

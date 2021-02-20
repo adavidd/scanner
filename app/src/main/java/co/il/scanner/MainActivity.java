@@ -366,6 +366,9 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "אוקי",
                             (dialog, which) -> {
                                 dialog.dismiss();
+                                mProgressBar.setVisibility(View.GONE);
+                                mStartButton.setVisibility(View.VISIBLE);
+                                mMyOrdersTV.setVisibility(View.VISIBLE);
                             });
 
                     alertDialog.show();
@@ -670,6 +673,9 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         mProgressBar.setVisibility(View.VISIBLE);
         mStartButton.setVisibility(View.GONE);
         mMyOrdersTV.setVisibility(View.GONE);
+
+        mOrdersList.clear();
+        mOrdersList.addAll(orders.getOrderItems());
         getOrder(orders.getId());
 
     }
