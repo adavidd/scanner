@@ -48,8 +48,8 @@ import io.reactivex.disposables.Disposable;
 import static co.il.scanner.Constants.LOGIN_USER;
 
 public class MainActivity extends AppCompatActivity implements OrderAdapter.OrderAdapterListener,
-                                            HandScanDialog.HandScanDialogListener,
-                                            MyOrdersAdapter.MyOrdersAdapterListener {
+        HandScanDialog.HandScanDialogListener,
+        MyOrdersAdapter.MyOrdersAdapterListener {
 
     private final static String SCAN_ACTION_RCV = "scan.rcv.message";
     private final static String SCAN_ACTION_ZKC = "com.zkc.scancode";
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     private LottieAnimationView mScanning;
     boolean isScanning = false;
     private ProgressBar mProgressBar;
-    private LinearLayout mRecyclerLinear;
+    private LinearLayout mOrderLinear;
     private TextView mClientText;
     private List<OrderItemsItem> mOrdersList;
     private Dialog clientDetailsDialog;
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         mScanning = findViewById(R.id.MA_animationView_LAV);
         mRecyclerView = findViewById(R.id.MA_recycler_RV);
         mProgressBar = findViewById(R.id.MA_progress_bar_PB);
-        mRecyclerLinear = findViewById(R.id.MA_recycler_linear_LL);
+        mOrderLinear = findViewById(R.id.MA_recycler_linear_LL);
         mClientText = findViewById(R.id.MA_client_text_TV);
         mClientboxRL = findViewById(R.id.AM_client_box_RL);
         mHandScanLL = findViewById(R.id.MA_hand_scann_LL);
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
     private void initRecyclerView(Orders orders) {
 
-        mRecyclerLinear.setVisibility(View.VISIBLE);
+        mOrderLinear.setVisibility(View.VISIBLE);
 
         String clientNumber = orders.getCustomer().getTz1();
         mClientText.setText(clientNumber);
@@ -124,15 +124,15 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         mOrderAdapter = new OrderAdapter(this, this, mOrdersList);
         mRecyclerView.setAdapter(mOrderAdapter);
 
-        if (orders.getStatusId() == 3){
+        if (orders.getStatusId() == 3) {
 
             mFinishedTextTV.setText("סיים תשלום");
 
-        }else if (orders.getStatusId() == 4){
+        } else if (orders.getStatusId() == 4) {
 
             mFinishedTextTV.setText("ההזמנה הושלמה");
 
-        }else if (orders.getStatusId() == 2 || orders.getStatusId() == 1){
+        } else if (orders.getStatusId() == 2 || orders.getStatusId() == 1) {
 
             mFinishedTextTV.setText("סיים הזמנה");
 
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     @Override
     public void onBackPressed() {
 
-        if (mRecyclerLinear.getVisibility() == View.VISIBLE) {
+        if (mOrderLinear.getVisibility() == View.VISIBLE) {
 
             AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom).create();
             alertDialog.setTitle("לצאת מההזמנה?");
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "כן",
                     (dialog, which) -> {
                         dialog.dismiss();
-                        mRecyclerLinear.setVisibility(View.GONE);
+                        mOrderLinear.setVisibility(View.GONE);
                         mStartButton.setVisibility(View.VISIBLE);
                         mMyOrdersTV.setVisibility(View.VISIBLE);
                     });
@@ -160,17 +160,13 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             alertDialog.show();
 
 
-
-        }
-
-        else if (mMyOrdersListRV.getVisibility() == View.VISIBLE){
+        } else if (mMyOrdersListRV.getVisibility() == View.VISIBLE) {
 
             mMyOrdersListRV.setVisibility(View.GONE);
             mStartButton.setVisibility(View.VISIBLE);
             mMyOrdersTV.setVisibility(View.VISIBLE);
 
-        }
-        else {
+        } else {
 
             super.onBackPressed();
 
@@ -208,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         });
 
 
-
         mFinishdOrderRL.setOnClickListener(view -> {
 
             finishOrder();
@@ -227,9 +222,6 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     }
 
 
-
-
-
     private void setMyOrdersListRecycler() {
 
         RequestManager.getOrdersList(mLoginUser.getId()).subscribe(new Observer<StatusOrders>() {
@@ -241,10 +233,10 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             @Override
             public void onNext(@NonNull StatusOrders statusOrders) {
 
-                    mMyOrdersListRV.setVisibility(View.VISIBLE);
-                    mMyOrdersListRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                    mMyOrdersAdapter = new MyOrdersAdapter(MainActivity.this, MainActivity.this, statusOrders.getOrdersList());
-                    mMyOrdersListRV.setAdapter(mMyOrdersAdapter);
+                mMyOrdersListRV.setVisibility(View.VISIBLE);
+                mMyOrdersListRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                mMyOrdersAdapter = new MyOrdersAdapter(MainActivity.this, MainActivity.this, statusOrders.getOrdersList());
+                mMyOrdersListRV.setAdapter(mMyOrdersAdapter);
             }
 
             @Override
@@ -259,15 +251,12 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         });
 
 
-
-
     }
-
 
 
     private void finishOrder() {
 
-        if (mOrders.getStatusId() == 2){
+        if (mOrders.getStatusId() == 2) {
 
             CompleteOrder completeOrder = new CompleteOrder();
             completeOrder.setOrderId(mOrders.getId());
@@ -305,9 +294,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                 }
             });
 
-        }
-
-        else if (mOrders.getStatusId() == 3){
+        } else if (mOrders.getStatusId() == 3) {
 
             mFinishedProgressBar.setVisibility(View.VISIBLE);
 
@@ -328,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
                     new Handler().postDelayed(() -> {
 
-                        mRecyclerLinear.setVisibility(View.GONE);
+                        mOrderLinear.setVisibility(View.GONE);
                         mStartButton.setVisibility(View.VISIBLE);
                         mMyOrdersTV.setVisibility(View.VISIBLE);
                         mFinishedProgressBar.setVisibility(View.GONE);
@@ -369,12 +356,12 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             @Override
             public void onNext(@NonNull NextOrder nextOrder) {
 
-                if (nextOrder.getStatus().equals("ok")){
+                if (nextOrder.getStatus().equals("ok")) {
 
                     getOrder(nextOrder.getOrder().getId());
-                }else {
+                } else {
 
-                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this,  R.style.AlertDialogCustom).create();
+                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom).create();
                     alertDialog.setMessage(nextOrder.getMessage());
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "אוקי",
                             (dialog, which) -> {
@@ -397,12 +384,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         });
 
 
-
-
-
     }
-
-
 
 
     private void getOrder(int nextOrderId) {
@@ -439,6 +421,18 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         });
 
 
+    }
+
+    private void showScannerDialog() {
+
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom).create();
+        alertDialog.setMessage("אפשר לסרוק רק כשהזמנה פתוחה");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "אוקי",
+                (dialog, which) -> {
+                    dialog.dismiss();
+                });
+
+        alertDialog.show();
 
     }
 
@@ -448,12 +442,24 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
         if (e.getAction() == KeyEvent.ACTION_DOWN) {
 
+
             if (e.getKeyCode() == 301 || e.getKeyCode() == 302 || e.getKeyCode() == 303) {
-                Log.i("chaim", "ACTION_DOWN: ");
-                mScanning.setVisibility(View.VISIBLE);
-                if (!isScanning) {
-                    mScanning.playAnimation();
-                    isScanning = true;
+
+                if (inCollectionMode()) {
+
+                    Log.i("chaim", "ACTION_DOWN: ");
+                    mScanning.setVisibility(View.VISIBLE);
+                    if (!isScanning) {
+                        mScanning.playAnimation();
+                        isScanning = true;
+                    }
+                }
+
+                else {
+
+                    showScannerDialog();
+                    vibrate(500);
+
                 }
             }
         }
@@ -474,6 +480,15 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
     }
 
+
+    public boolean inCollectionMode() {
+
+        return mOrderLinear.getVisibility() == View.VISIBLE && mOrders.getStatusId() == 2;
+
+
+    }
+
+
     private void initScannerReceiver() {
 
 
@@ -481,29 +496,35 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             @Override
             public void onReceive(Context context, Intent intent) {
 
+                if (inCollectionMode()) {
 
-                byte[] barocode = intent.getByteArrayExtra("barocode");
-                int barocodelen = intent.getIntExtra("length", 0);
-                byte temp = intent.getByteExtra("barcodeType", (byte) 0);
-                android.util.Log.i("debug", "----codetype--" + temp);
-                barcodeStr = new String(barocode, 0, barocodelen);
-                mScanning.cancelAnimation();
-                checkIfBarcodeExist(barcodeStr);
 
-                Toast.makeText(context, barcodeStr, Toast.LENGTH_SHORT).show();
+                    byte[] barocode = intent.getByteArrayExtra("barocode");
+                    int barocodelen = intent.getIntExtra("length", 0);
+                    byte temp = intent.getByteExtra("barcodeType", (byte) 0);
+                    android.util.Log.i("debug", "----codetype--" + temp);
+                    barcodeStr = new String(barocode, 0, barocodelen);
+                    mScanning.cancelAnimation();
+                    checkIfBarcodeExist(barcodeStr);
+
+                    Toast.makeText(context, barcodeStr, Toast.LENGTH_SHORT).show();
+
+                }
             }
         };
-        
+
 
         BroadcastReceiver broadcastReceiver1 = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
 
+                if (inCollectionMode()) {
 
-                barcodeStr = intent.getExtras().getString("code");
-                mScanning.cancelAnimation();
-                checkIfBarcodeExist(barcodeStr);
-                Toast.makeText(context, barcodeStr, Toast.LENGTH_SHORT).show();
+                    barcodeStr = intent.getExtras().getString("code");
+                    mScanning.cancelAnimation();
+                    checkIfBarcodeExist(barcodeStr);
+                    Toast.makeText(context, barcodeStr, Toast.LENGTH_SHORT).show();
+                }
             }
         };
 
@@ -518,24 +539,23 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     }
 
 
-
     private void checkIfBarcodeExist(String barcodeStr) {
         boolean itemMatched = false;
-        if (mOrdersList != null){
+        if (mOrdersList != null) {
 
             for (int i = 0; i < mOrdersList.size(); i++) {
 
-                if (mOrdersList.get(i).getItem() != null){
+                if (mOrdersList.get(i).getItem() != null) {
 
                     String barcode1 = mOrdersList.get(i).getItem().getBarcode1();
                     String barcode2 = mOrdersList.get(i).getItem().getBarcode2();
 
                     if (barcode1 != null && barcode1.equals(barcodeStr) || barcode2 != null && barcode2.equals(barcodeStr)) {
                         itemMatched = true;
-                        if(mOrdersList.get(i).getOrderQuantity() <= mOrdersList.get(i).getCollectedQuantity()){
+                        if (mOrdersList.get(i).getOrderQuantity() <= mOrdersList.get(i).getCollectedQuantity()) {
                             blink(Color.RED);
                             vibrate(2000);
-                        }else {
+                        } else {
                             mOrdersList.get(i).setCollectedQuantity(mOrdersList.get(i).getCollectedQuantity() + 1);
                             mOrderAdapter.notifyDataSetChanged();
                             UpdateServer(mOrdersList.get(i));
@@ -547,19 +567,14 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                 }
 
 
-
             }
-            if(!itemMatched){
+            if (!itemMatched) {
                 vibrate(500);
             }
         }
 
 
-
     }
-
-
-
 
 
     private void UpdateServer(OrderItemsItem orderItemsItem) {
@@ -567,7 +582,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         UpdateItem updateItem = new UpdateItem();
         updateItem.setItemId(orderItemsItem.getItemId());
         updateItem.setOrderId(orderItemsItem.getOrderId());
-        updateItem.setUserId(mOrders.getId());
+        updateItem.setUserId(mLoginUser.getId());
         updateItem.setQuantity(orderItemsItem.getCollectedQuantity());
 
 
@@ -594,20 +609,17 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         });
 
 
-
     }
 
 
-
-
-    private  void vibrate(int ms){
+    private void vibrate(int ms) {
         Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(ms);
         blink(Color.RED);
     }
 
 
-    private void blink(int c){
+    private void blink(int c) {
         final LinearLayout layout = (LinearLayout) findViewById(R.id.MA_recycler_linear_LL);
         final AnimationDrawable drawable = new AnimationDrawable();
         final Handler handler = new Handler();
@@ -622,8 +634,6 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     }
 
 
-
-
     @Override
     public void onHandScanClicked(String handScan) {
 
@@ -631,8 +641,6 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
 
     }
-
-
 
 
     @Override
@@ -653,7 +661,6 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
 
     }
-
 
 
     @Override

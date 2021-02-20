@@ -21,7 +21,7 @@ public class Orders{
 	private boolean deleted;
 
 	@SerializedName("ordered_from")
-	private Object orderedFrom;
+	private String orderedFrom;
 
 	@SerializedName("id")
 	private int id;
@@ -58,7 +58,7 @@ public class Orders{
 		return deleted;
 	}
 
-	public Object getOrderedFrom(){
+	public String getOrderedFrom(){
 		return orderedFrom;
 	}
 
@@ -94,7 +94,7 @@ public class Orders{
 		this.deleted = deleted;
 	}
 
-	public void setOrderedFrom(Object orderedFrom) {
+	public void setOrderedFrom(String orderedFrom) {
 		this.orderedFrom = orderedFrom;
 	}
 
