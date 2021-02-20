@@ -73,6 +73,18 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
             }
         });
+        
+        holder.mItemMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (mOrdersItems.get(position).getCollectedQuantity() > 0) {
+
+                    mListener.onMinusClicked(mOrdersItems.get(position));
+                }
+
+            }
+        });
 
 
     }
@@ -89,7 +101,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         private final TextView mItemCount;
         private final TextView mItemName;
         private final ImageView mItemDone;
-        private final RelativeLayout mItemDelete;
+        private final ImageView mItemDelete;
+        private final ImageView mItemMinus;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -97,7 +110,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             mItemDone = itemView.findViewById(R.id.OI_done_icon_IV);
             mItemCount = itemView.findViewById(R.id.OI_text_count_TV);
             mItemName = itemView.findViewById(R.id.OI_item_name_TV);
-            mItemDelete = itemView.findViewById(R.id.OI_delete_icon_RL);
+            mItemDelete = itemView.findViewById(R.id.OI_delete_icon_IV);
+            mItemMinus = itemView.findViewById(R.id.OI_minos_icon_IV);
         }
     }
 
@@ -105,5 +119,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     public interface OrderAdapterListener {
 
         void onDeleteClicked(OrderItemsItem orderItemsItem);
+
+        void onMinusClicked(OrderItemsItem orderItemsItem);
     }
 }

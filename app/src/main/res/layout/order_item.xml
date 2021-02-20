@@ -55,18 +55,30 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/OI_delete_icon_RL"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:background="@color/teal_700"
         android:layout_weight="1">
 
-
         <ImageView
+            android:id="@+id/OI_delete_icon_IV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:background="@drawable/ic_baseline_clear_24"
+            android:visibility="visible"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="7dp"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/OI_minos_icon_IV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_baseline_minimize_24"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="13dp"
             android:visibility="visible"
             tools:visibility="visible" />
 
