@@ -39,7 +39,12 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.mOrderText.setText(String.valueOf(mOrdersList.get(position).getId()));
+        StringBuilder myString = new StringBuilder();
+        myString.append(mOrdersList.get(position).getId()).append(" \n\n");
+        myString.append(mOrdersList.get(position).getStatusId()).append(" \n\n");
+        myString.append(mOrdersList.get(position).getOrderedFrom()).append(" \n\n");
+
+        holder.mOrderText.setText(myString);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
