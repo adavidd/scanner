@@ -27,7 +27,15 @@ public class ClientDialog {
 
             if (orders != null){
 
-                clientDetails.setText(orders.getCustomer().getFirstname1() + " " + orders.getCustomer().getLastname());
+                StringBuilder myString = new StringBuilder();
+                myString.append(orders.getCustomer().getFirstname1()).append(" ");
+                myString.append(orders.getCustomer().getFirstname2()).append(" ");
+                myString.append(orders.getCustomer().getLastname()).append(" \n\n");
+                myString.append(orders.getCustomer().getAddress()).append(" \n\n");
+                myString.append(orders.getCustomer().getTz1()).append(" \n\n");
+                myString.append(orders.getCustomer().getTz2()).append(" \n\n");
+
+                clientDetails.setText(myString);
             }
 
 
