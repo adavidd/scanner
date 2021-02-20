@@ -74,6 +74,50 @@ public class Orders{
 		return customerId;
 	}
 
+	public void setForeignId(Object foreignId) {
+		this.foreignId = foreignId;
+	}
+
+	public void setOrderStatus(OrderStatus orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public void setStatusId(int statusId) {
+		this.statusId = statusId;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public void setOrderedFrom(Object orderedFrom) {
+		this.orderedFrom = orderedFrom;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setOrderTime(Object orderTime) {
+		this.orderTime = orderTime;
+	}
+
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+
+	public void setOrderItems(List<OrderItemsItem> orderItems) {
+		this.orderItems = orderItems;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
 	public List<OrderItemsItem> getOrderItems(){
 		return orderItems;
 	}
