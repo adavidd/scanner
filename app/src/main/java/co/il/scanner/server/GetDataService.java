@@ -35,7 +35,7 @@ public interface GetDataService {
     @POST("/api/orders/updateCompleteOrderCollection")
     Observable<Status> updateCompleteOrderCollection(@Body CompleteOrder completeOrder);
 
-    @POST("/api/processPayment")
+    @POST("/api/orders/processPayment")
     Observable<StatusMessage> processPayment(@Body ProcessPaymentObject processPaymentObject);
 
     @GET("/api/orders")

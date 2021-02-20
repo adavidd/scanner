@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     private ProgressBar mProgressBar;
     private LinearLayout mOrderLinear;
     private TextView mClientText;
-    private List<OrderItemsItem> mOrdersList;
+    private List<OrderItemsItem> mOrdersList = new ArrayList<>();
     private Dialog clientDetailsDialog;
     private Orders mOrders;
     private RelativeLayout mClientboxRL;
@@ -115,10 +116,13 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
         mOrderLinear.setVisibility(View.VISIBLE);
 
-        String clientNumber = orders.getCustomer().getTz1();
-        mClientText.setText(clientNumber);
+        if (orders.getCustomer() != null) {
 
-        mOrdersList = orders.getOrderItems();
+            String clientNumber = orders.getCustomer().getTz1();
+            mClientText.setText(clientNumber);
+        }
+
+        mOrdersList.addAll(orders.getOrderItems());
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mOrderAdapter = new OrderAdapter(this, this, mOrdersList);
@@ -206,7 +210,33 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
         mFinishdOrderRL.setOnClickListener(view -> {
 
-            finishOrder();
+            if (mOrders.getStatusId() == 3) {
+
+                finishOrder();
+
+            } else if (mOrders.getStatusId() == 2) {
+
+
+                if (finishedAllCollection()) {
+
+                    finishOrder();
+
+                } else {
+
+                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom).create();
+                    alertDialog.setTitle("לסיים מההזמנה?");
+                    alertDialog.setMessage("לא השלמת את כל הליקוט. בטוח שברצונך לסיים?");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "כן",
+                            (dialog, which) -> {
+                                dialog.dismiss();
+                                finishOrder();
+
+                            });
+
+                    alertDialog.show();
+
+                }
+            }
 
 
         });
@@ -233,10 +263,15 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             @Override
             public void onNext(@NonNull StatusOrders statusOrders) {
 
-                mMyOrdersListRV.setVisibility(View.VISIBLE);
-                mMyOrdersListRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                mMyOrdersAdapter = new MyOrdersAdapter(MainActivity.this, MainActivity.this, statusOrders.getOrdersList());
-                mMyOrdersListRV.setAdapter(mMyOrdersAdapter);
+                if (statusOrders.getOrdersList().size() > 0) {
+
+                    mMyOrdersListRV.setVisibility(View.VISIBLE);
+                    mMyOrdersListRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                    mMyOrdersAdapter = new MyOrdersAdapter(MainActivity.this, MainActivity.this, statusOrders.getOrdersList());
+                    mMyOrdersListRV.setAdapter(mMyOrdersAdapter);
+                } else {
+                    Toast.makeText(MainActivity.this, "אין היסטוריית הזמנות", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -294,52 +329,89 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                 }
             });
 
+
         } else if (mOrders.getStatusId() == 3) {
 
-            mFinishedProgressBar.setVisibility(View.VISIBLE);
 
-            ProcessPaymentObject processPaymentObject = new ProcessPaymentObject();
-            processPaymentObject.setOrderId(mOrders.getId());
-            processPaymentObject.setUserId(mLoginUser.getId());
+            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom).create();
+            alertDialog.setTitle("לסיים תשלום?");
+            alertDialog.setMessage("האם בטוח שברצונך לסיים תשלום?");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "כן",
+                    (dialog, which) -> {
+                        dialog.dismiss();
 
-            RequestManager.processPayment(processPaymentObject).subscribe(new Observer<StatusMessage>() {
-                @Override
-                public void onSubscribe(@NonNull Disposable d) {
+                        mFinishedProgressBar.setVisibility(View.VISIBLE);
 
-                }
+                        ProcessPaymentObject processPaymentObject = new ProcessPaymentObject();
+                        processPaymentObject.setOrderId(mOrders.getId());
+                        processPaymentObject.setUserId(mLoginUser.getId());
 
-                @Override
-                public void onNext(@NonNull StatusMessage statusMessage) {
+                        RequestManager.processPayment(processPaymentObject).subscribe(new Observer<StatusMessage>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
 
-                    Toast.makeText(MainActivity.this, "ההזמנה הושלמה", Toast.LENGTH_SHORT).show();
+                            }
 
-                    new Handler().postDelayed(() -> {
+                            @Override
+                            public void onNext(@NonNull StatusMessage statusMessage) {
 
-                        mOrderLinear.setVisibility(View.GONE);
-                        mStartButton.setVisibility(View.VISIBLE);
-                        mMyOrdersTV.setVisibility(View.VISIBLE);
-                        mFinishedProgressBar.setVisibility(View.GONE);
+                                Toast.makeText(MainActivity.this, "ההזמנה הושלמה", Toast.LENGTH_SHORT).show();
 
-                    }, 1000);
+                                new Handler().postDelayed(() -> {
+
+                                    mOrderLinear.setVisibility(View.GONE);
+                                    mStartButton.setVisibility(View.VISIBLE);
+                                    mMyOrdersTV.setVisibility(View.VISIBLE);
+                                    mFinishedProgressBar.setVisibility(View.GONE);
+
+                                }, 1000);
 
 
-                }
+                            }
 
-                @Override
-                public void onError(@NonNull Throwable e) {
+                            @Override
+                            public void onError(@NonNull Throwable e) {
 
-                    mFinishedProgressBar.setVisibility(View.GONE);
+                                Toast.makeText(MainActivity.this, "בעיה בתשלום", Toast.LENGTH_SHORT).show();
+                                mFinishedProgressBar.setVisibility(View.GONE);
+                                mOrderLinear.setVisibility(View.GONE);
+                                mStartButton.setVisibility(View.VISIBLE);
+                                mMyOrdersTV.setVisibility(View.VISIBLE);
 
-                }
+                            }
 
-                @Override
-                public void onComplete() {
+                            @Override
+                            public void onComplete() {
 
-                }
-            });
+                            }
+                        });
+
+
+                    });
+
+            alertDialog.show();
 
 
         }
+
+    }
+
+
+    private boolean finishedAllCollection() {
+
+        boolean finishedAllCollections = true;
+
+        for (int i = 0; i < mOrdersList.size(); i++) {
+
+            if (mOrdersList.get(i).getCollectedQuantity() != mOrdersList.get(i).getOrderQuantity()) {
+
+                finishedAllCollections = false;
+            }
+
+        }
+
+        return finishedAllCollections;
+
 
     }
 
@@ -456,9 +528,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                         mScanning.playAnimation();
                         isScanning = true;
                     }
-                }
-
-                else {
+                } else {
 
                     showScannerDialog();
                     vibrate(500);
@@ -649,11 +719,20 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     @Override
     public void onDeleteClicked(OrderItemsItem orderItemsItem) {
 
-        orderItemsItem.setCollectedQuantity(orderItemsItem.getCollectedQuantity() - 1);
+        orderItemsItem.setCollectedQuantity(0);
         mOrderAdapter.notifyDataSetChanged();
         UpdateServer(orderItemsItem);
 
 
+    }
+
+
+    @Override
+    public void onMinusClicked(OrderItemsItem orderItemsItem) {
+
+        orderItemsItem.setCollectedQuantity(orderItemsItem.getCollectedQuantity() - 1);
+        mOrderAdapter.notifyDataSetChanged();
+        UpdateServer(orderItemsItem);
     }
 
 
@@ -674,8 +753,6 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         mStartButton.setVisibility(View.GONE);
         mMyOrdersTV.setVisibility(View.GONE);
 
-        mOrdersList.clear();
-        mOrdersList.addAll(orders.getOrderItems());
         getOrder(orders.getId());
 
     }
