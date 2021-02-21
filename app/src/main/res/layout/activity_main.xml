@@ -30,6 +30,19 @@
                 android:textSize="20sp" />
 
 
+            <com.dinuscxj.progressbar.CircleProgressBar
+                android:id="@+id/MA_progress_bar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                app:progress_end_color="@color/order_item_orange"
+                app:progress_start_color="@color/order_item_orange"
+                app:progress_stroke_width="3dp"
+                app:progress_text_color="@android:color/white"
+                app:style="solid_line" />
+
         </RelativeLayout>
 
 

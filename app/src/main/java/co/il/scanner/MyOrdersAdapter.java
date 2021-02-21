@@ -41,16 +41,20 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
 
         StringBuilder myString = new StringBuilder();
         myString.append(mOrdersList.get(position).getId()).append(" \n\n");
-        myString.append(mOrdersList.get(position).getStatusId()).append(" \n\n");
-        myString.append(mOrdersList.get(position).getOrderedFrom()).append(" \n\n");
+        if (mOrdersList.get(position).getStatusId() == 1 || mOrdersList.get(position).getStatusId() == 2){
+            myString.append("מצב הזמנה: בתהליך ליקוט").append(" \n\n");
+        }else if (mOrdersList.get(position).getStatusId() == 3) {
+            myString.append("מצב הזמנה: ממתין לתשלום").append(" \n\n");
+        }else if (mOrdersList.get(position).getStatusId() == 4) {
+            myString.append("מצב הזמנה: הזמנה הושלמה").append(" \n\n");
+        }
+        if (mOrdersList.get(position).getOrderedFrom() != null){
+
+            myString.append(mOrdersList.get(position).getOrderedFrom()).append(" \n\n");
+        }
 
         holder.mOrderText.setText(myString);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onMyListItemClicked(mOrdersList.get(position));
-            }
-        });
+        holder.itemView.setOnClickListener(view -> mListener.onMyListItemClicked(mOrdersList.get(position)));
     }
 
     @Override
