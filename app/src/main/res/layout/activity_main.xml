@@ -53,7 +53,9 @@
                 android:layout_marginBottom="10dp"
                 android:padding="10dp"
                 android:background="@color/cardview_shadow_start_color"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="visible"
+                >
 
                 <ImageView
                     android:layout_width="40dp"

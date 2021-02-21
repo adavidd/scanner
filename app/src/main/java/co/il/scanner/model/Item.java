@@ -54,7 +54,12 @@ public class Item{
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	public void setSize(String size) {
+		this.size = size;
+	}
+	public void setColor(String color) {
+		this.color = color;
+	}
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -98,7 +103,10 @@ public class Item{
 
 	@SerializedName("name")
 	private String name;
-
+	@SerializedName("size")
+	private String size;
+	@SerializedName("color")
+	private String color;
 	@SerializedName("id")
 	private int id;
 
@@ -156,7 +164,12 @@ public class Item{
 	public String getName(){
 		return name;
 	}
-
+	public String getSize(){
+		return size;
+	}
+	public String getColor(){
+		return color;
+	}
 	public int getId(){
 		return id;
 	}

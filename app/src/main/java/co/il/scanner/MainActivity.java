@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
         if (orders.getCustomer() != null) {
 
-            String clientNumber = orders.getCustomer().getTz1();
+            String clientNumber ="הזמנה: " + orders.getId();
             mClientText.setText(clientNumber);
         }
 

@@ -28,6 +28,7 @@ public class ClientDialog {
             if (orders != null){
 
                 StringBuilder myString = new StringBuilder();
+                myString.append("הזמנה מספר: "+ orders.getId()).append(" \n\n");
                 myString.append(orders.getCustomer().getFirstname1()).append(" ");
                 myString.append(orders.getCustomer().getFirstname2()).append(" ");
                 myString.append(orders.getCustomer().getLastname()).append(" \n\n");

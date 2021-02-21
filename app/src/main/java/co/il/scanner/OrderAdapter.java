@@ -45,6 +45,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         if (mOrdersItems.get(position).getItem() != null) {
 
             holder.mItemName.setText(String.valueOf(mOrdersItems.get(position).getItem().getName()));
+            holder.mItemCode.setText(String.valueOf(mOrdersItems.get(position).getItem().getBarcode1() + " " +
+
+                    (mOrdersItems.get(position).getItem().getWarhouseDescription()!=null && mOrdersItems.get(position).getItem().getWarhouseDescription().toString().length()>0?mOrdersItems.get(position).getItem().getWarhouseDescription():"")
+
+            ));
+            holder.mItemDescription.setText(
+                    (mOrdersItems.get(position).getItem().getSize().length()>0?" מידה:" + mOrdersItems.get(position).getItem().getSize() :"")+
+
+                    (mOrdersItems.get(position).getItem().getColor().length()>0?" צבע: " + mOrdersItems.get(position).getItem().getColor():""));
         }
 
         int itemCollectedQuantity = mOrdersItems.get(position).getCollectedQuantity();
@@ -100,6 +109,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
         private final TextView mItemCount;
         private final TextView mItemName;
+        private final TextView mItemCode;
+        private final TextView mItemDescription;
         private final ImageView mItemDone;
         private final ImageView mItemDelete;
         private final ImageView mItemMinus;
@@ -110,6 +121,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             mItemDone = itemView.findViewById(R.id.OI_done_icon_IV);
             mItemCount = itemView.findViewById(R.id.OI_text_count_TV);
             mItemName = itemView.findViewById(R.id.OI_item_name_TV);
+            mItemCode = itemView.findViewById(R.id.OI_item_code_TV);
+            mItemDescription = itemView.findViewById(R.id.OI_item_description_TV);
             mItemDelete = itemView.findViewById(R.id.OI_delete_icon_IV);
             mItemMinus = itemView.findViewById(R.id.OI_minos_icon_IV);
         }

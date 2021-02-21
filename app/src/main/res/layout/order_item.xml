@@ -46,11 +46,41 @@
             android:id="@+id/OI_item_name_TV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="top"
+            android:layout_marginTop="10dp"
             android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            tools:text="ספר קודש" />
+
+        <TextView
+            android:id="@+id/OI_item_code_TV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/OI_item_name_TV"
             android:layout_gravity="center"
-            tools:text="ספר קודש"/>
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+
+
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            tools:text="ספר קודש" />
+        <TextView
+            android:id="@+id/OI_item_description_TV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/OI_item_code_TV"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+
+
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            tools:text="ספר קודש" />
 
     </RelativeLayout>
 
