@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     private ProgressBar mProgressBar;
     private LinearLayout mOrderLinear;
     private TextView mClientText;
-    private List<OrderItemsItem> mOrdersList = new ArrayList<>();
+    private List<OrderItemsItem> mOrdersList;
     private Dialog clientDetailsDialog;
     private Orders mOrders;
     private RelativeLayout mClientboxRL;
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             mClientText.setText(clientNumber);
         }
 
-        mOrdersList.addAll(orders.getOrderItems());
+        mOrdersList = orders.getOrderItems();
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mOrderAdapter = new OrderAdapter(this, this, mOrdersList);
