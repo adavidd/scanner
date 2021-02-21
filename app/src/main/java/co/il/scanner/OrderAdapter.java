@@ -61,12 +61,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
         holder.mItemCount.setText(itemCollectedQuantity + "/" + itemOrderQuantity);
 
-        if (itemCollectedQuantity == itemOrderQuantity) {
-            holder.mItemCount.setVisibility(View.GONE);
+        if (itemCollectedQuantity >= itemOrderQuantity) {
+//            holder.mItemCount.setVisibility(View.GONE);
             holder.mItemDone.setVisibility(View.VISIBLE);
         } else {
 
-            holder.mItemCount.setVisibility(View.VISIBLE);
+//            holder.mItemCount.setVisibility(View.VISIBLE);
             holder.mItemDone.setVisibility(View.GONE);
         }
 

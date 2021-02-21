@@ -18,10 +18,11 @@
             android:id="@+id/OI_text_count_TV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_centerInParent="true"
+            android:layout_centerInParent="false"
+            android:layout_centerHorizontal="true"
             android:textColor="@color/white"
-            tools:text="0/2"/>
+            android:textSize="18sp"
+            tools:text="0/2" />
 
 
         <ImageView
@@ -49,7 +50,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_gravity="top"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="1dp"
             android:gravity="center"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
@@ -61,12 +62,12 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/OI_item_name_TV"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:gravity="center"
 
 
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="15sp"
             tools:text="ספר קודש" />
         <TextView
             android:id="@+id/OI_item_description_TV"
@@ -74,12 +75,12 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/OI_item_code_TV"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:gravity="center"
 
 
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="15sp"
             tools:text="ספר קודש" />
 
     </RelativeLayout>
