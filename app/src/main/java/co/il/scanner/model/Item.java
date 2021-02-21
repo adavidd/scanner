@@ -4,8 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Item{
 
-	@SerializedName("code")
-	private Object code;
+
 
 	public void setComments(Object comments) {
 		this.comments = comments;
@@ -109,11 +108,13 @@ public class Item{
 	private String color;
 	@SerializedName("id")
 	private int id;
+	@SerializedName("code")
+	private int code;
 
 	@SerializedName("updatedAt")
 	private String updatedAt;
 
-	public Object getCode(){
+	public int getCode(){
 		return code;
 	}
 
