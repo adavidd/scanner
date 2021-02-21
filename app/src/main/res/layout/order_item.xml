@@ -8,6 +8,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/OI_order_count_RL"
         android:layout_width="0dp"
         android:background="@color/teal_200"
         android:layout_height="match_parent"
@@ -64,11 +65,10 @@
             android:layout_gravity="center"
             android:layout_marginTop="3dp"
             android:gravity="center"
-
-
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             tools:text="ספר קודש" />
+
         <TextView
             android:id="@+id/OI_item_description_TV"
             android:layout_width="match_parent"
@@ -77,8 +77,6 @@
             android:layout_gravity="center"
             android:layout_marginTop="3dp"
             android:gravity="center"
-
-
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             tools:text="ספר קודש" />

@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.dinuscxj.progressbar.CircleProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     private TextView mMyOrdersTV;
     private RecyclerView mMyOrdersListRV;
     private MyOrdersAdapter mMyOrdersAdapter;
+    private CircleProgressBar mOrderCircleProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         mFinishedProgressBar = findViewById(R.id.MA_progress_bar_order_PB);
         mMyOrdersTV = findViewById(R.id.MA_my_orders_TV);
         mMyOrdersListRV = findViewById(R.id.my_orders_list_RV);
+        mOrderCircleProgress = findViewById(R.id.MA_progress_bar);
 
 
         Toast.makeText(this, "שלום " + mLoginUser.getFirstname(), Toast.LENGTH_SHORT).show();
@@ -116,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
         mOrderLinear.setVisibility(View.VISIBLE);
 
+
         if (orders.getCustomer() != null) {
 
             String clientNumber ="הזמנה: " + orders.getId();
@@ -123,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         }
 
         mOrdersList = orders.getOrderItems();
+        setCircleProgressBar();
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mOrderAdapter = new OrderAdapter(this, this, mOrdersList);
@@ -141,6 +146,29 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             mFinishedTextTV.setText("סיים הזמנה");
 
         }
+
+    }
+
+
+
+
+    private void setCircleProgressBar() {
+
+        int ordersCompleted = 0;
+
+        for (int i = 0; i < mOrdersList.size(); i++) {
+
+            if (mOrdersList.get(i).getCollectedQuantity() == mOrdersList.get(i).getOrderQuantity()){
+                ordersCompleted ++;
+            }
+        }
+
+        if (ordersCompleted > 0){
+            mOrderCircleProgress.setProgress((int)((float)ordersCompleted / (float) mOrdersList.size() * 100));
+        }else {
+            mOrderCircleProgress.setProgress(0);
+        }
+
 
     }
 
@@ -631,6 +659,17 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                         } else {
                             mOrdersList.get(i).setCollectedQuantity(mOrdersList.get(i).getCollectedQuantity() + 1);
                             mOrderAdapter.notifyDataSetChanged();
+
+                            if (i == 0){
+                                mRecyclerView.smoothScrollToPosition(0);
+                            }else if (i > 0 && i < mOrdersList.size() - 1){
+                                mRecyclerView.smoothScrollToPosition(i + 1);
+                            }
+                            else {
+                                mRecyclerView.smoothScrollToPosition(i);
+
+                            }
+                            setCircleProgressBar();
                             UpdateServer(mOrdersList.get(i));
                             blink(Color.GREEN);
 

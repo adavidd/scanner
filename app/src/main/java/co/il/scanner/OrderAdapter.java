@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -95,6 +96,18 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             }
         });
 
+        if (itemCollectedQuantity > 0 && itemCollectedQuantity < itemOrderQuantity){
+
+            holder.mItemCountRL.setBackground(ContextCompat.getDrawable(mContext, R.color.order_item_orange));
+
+        }else if (itemCollectedQuantity == itemOrderQuantity){
+            holder.mItemCountRL.setBackground(ContextCompat.getDrawable(mContext, R.color.teal_200));
+
+        }else {
+
+            holder.mItemCountRL.setBackground(ContextCompat.getDrawable(mContext, R.color.order_item_gray));
+        }
+
 
     }
 
@@ -114,6 +127,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         private final ImageView mItemDone;
         private final ImageView mItemDelete;
         private final ImageView mItemMinus;
+        private final RelativeLayout mItemCountRL;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -125,6 +139,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             mItemDescription = itemView.findViewById(R.id.OI_item_description_TV);
             mItemDelete = itemView.findViewById(R.id.OI_delete_icon_IV);
             mItemMinus = itemView.findViewById(R.id.OI_minos_icon_IV);
+            mItemCountRL = itemView.findViewById(R.id.OI_order_count_RL);
         }
     }
 
