@@ -353,17 +353,17 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions, @androidx.annotation.NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == REQUEST_CODE_FOR_CAMERA) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 mCodeScanner.startPreview();
                 scannerView.setVisibility(View.VISIBLE);
             }
         }
-    }
 
+    }
 
     public static boolean checkIfAlreadyHavePermission(Context context, String... permissions) {
         for (String permission : permissions) {
