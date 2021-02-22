@@ -113,7 +113,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return mOrdersItems.size();
+        if (mOrdersItems == null){
+            return 0;
+        }else {
+
+            return mOrdersItems.size();
+        }
     }
 
 
