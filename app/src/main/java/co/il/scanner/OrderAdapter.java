@@ -45,7 +45,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
         if (mOrdersItems.get(position).getItem() != null) {
 
-            holder.mItemName.setText(String.valueOf(mOrdersItems.get(position).getItem().getCode()) + " - "+String.valueOf(mOrdersItems.get(position).getItem().getName()));
+            holder.mItemName.setText(String.valueOf(mOrdersItems.get(position).getItem().getName()));
             holder.mItemCode.setText(String.valueOf(mOrdersItems.get(position).getItem().getBarcode1() + " " +
 
                     (mOrdersItems.get(position).getItem().getWarhouseDescription()!=null && mOrdersItems.get(position).getItem().getWarhouseDescription().toString().length()>0?mOrdersItems.get(position).getItem().getWarhouseDescription():"")

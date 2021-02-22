@@ -1,6 +1,7 @@
 package co.il.scanner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -137,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         mOrderCircleProgress = findViewById(R.id.MA_progress_bar);
 
 
-        Toast.makeText(this, "שלום " + mLoginUser.getFirstname(), Toast.LENGTH_SHORT).show();
     }
 
 
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
         if (orders.getStatusId() == 3) {
 
-            mFinishedTextTV.setText("סיים תשלום");
+            mFinishedTextTV.setText("ביצוע תשלום");
 
         } else if (orders.getStatusId() == 4) {
 
@@ -221,7 +221,6 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
             AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom).create();
             alertDialog.setTitle("לצאת מההזמנה?");
-            alertDialog.setMessage("כל הנתונים יאבדו");
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "כן",
                     (dialog, which) -> {
                         dialog.dismiss();
@@ -293,12 +292,19 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                 } else {
 
                     AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom).create();
-                    alertDialog.setTitle("לסיים מההזמנה?");
+                    alertDialog.setTitle("לסיים הזמנה?");
                     alertDialog.setMessage("לא השלמת את כל הליקוט. בטוח שברצונך לסיים?");
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "כן",
                             (dialog, which) -> {
                                 dialog.dismiss();
+                                mFinishdOrderRL.setBackground(ContextCompat.getDrawable(this, R.color.teal_700));
                                 finishOrder();
+
+                            });
+
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "לא",
+                            (dialog, which) -> {
+                                dialog.dismiss();
 
                             });
 
@@ -424,7 +430,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                             @Override
                             public void onNext(@NonNull StatusMessage statusMessage) {
 
-                                Toast.makeText(MainActivity.this, "ההזמנה הושלמה", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "ההזמנה הושלמה", Toast.LENGTH_LONG).show();
 
                                 new Handler().postDelayed(() -> {
 
@@ -441,11 +447,23 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                             @Override
                             public void onError(@NonNull Throwable e) {
 
-                                Toast.makeText(MainActivity.this, "בעיה בתשלום", Toast.LENGTH_SHORT).show();
-                                mFinishedProgressBar.setVisibility(View.GONE);
-                                mOrderLinear.setVisibility(View.GONE);
-                                mStartButton.setVisibility(View.VISIBLE);
-                                mMyOrdersTV.setVisibility(View.VISIBLE);
+
+                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom).create();
+                                alertDialog.setTitle("התשלום נכשל");
+                                alertDialog.setMessage("אנא העבר את ההזמנה לטיפול מנהל");
+                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "אישור",
+                                        (dialog, which) -> {
+                                            dialog.dismiss();
+                                            mFinishedProgressBar.setVisibility(View.GONE);
+                                            mOrderLinear.setVisibility(View.GONE);
+                                            mStartButton.setVisibility(View.VISIBLE);
+                                            mMyOrdersTV.setVisibility(View.VISIBLE);
+
+                                        });
+
+                                alertDialog.show();
+
+
 
                             }
 
@@ -801,6 +819,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
         orderItemsItem.setCollectedQuantity(0);
         mOrderAdapter.notifyDataSetChanged();
+        setCircleProgressBar();
         UpdateServer(orderItemsItem);
 
 
@@ -812,6 +831,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
         orderItemsItem.setCollectedQuantity(orderItemsItem.getCollectedQuantity() - 1);
         mOrderAdapter.notifyDataSetChanged();
+        setCircleProgressBar();
         UpdateServer(orderItemsItem);
     }
 
