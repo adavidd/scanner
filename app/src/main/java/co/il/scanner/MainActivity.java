@@ -26,7 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.budiyev.android.codescanner.CodeScanner;
+import com.budiyev.android.codescanner.CodeScannerView;
+import com.budiyev.android.codescanner.DecodeCallback;
 import com.dinuscxj.progressbar.CircleProgressBar;
+import com.google.zxing.Result;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     private RecyclerView mMyOrdersListRV;
     private MyOrdersAdapter mMyOrdersAdapter;
     private CircleProgressBar mOrderCircleProgress;
+    private CodeScanner mCodeScanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +93,27 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         initViews();
         initListeners();
         initScannerReceiver();
+
+
+        CodeScannerView scannerView = findViewById(R.id.scanner_view);
+        mCodeScanner = new CodeScanner(this, scannerView);
+        mCodeScanner.setDecodeCallback(new DecodeCallback() {
+            @Override
+            public void onDecoded(@NonNull final Result result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        scannerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCodeScanner.startPreview();
+            }
+        });
 
     }
 
@@ -115,6 +141,21 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     }
 
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCodeScanner.startPreview();
+    }
+
+    @Override
+    protected void onPause() {
+        mCodeScanner.releaseResources();
+        super.onPause();
+    }
+
+
+    
     private void initRecyclerView(Orders orders) {
 
         mOrderLinear.setVisibility(View.VISIBLE);
