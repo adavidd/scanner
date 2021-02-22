@@ -1,22 +1,29 @@
 package co.il.scanner;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -61,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     private final static String SCAN_ACTION_RCV = "scan.rcv.message";
     private final static String SCAN_ACTION_ZKC = "com.zkc.scancode";
     private static final int START_COLLECT = 2;
+    private static final int REQUEST_CODE_FOR_CAMERA = 2347;
     private TextView mStartButton;
     private RecyclerView mRecyclerView;
     private OrderAdapter mOrderAdapter;
@@ -84,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     private MyOrdersAdapter mMyOrdersAdapter;
     private CircleProgressBar mOrderCircleProgress;
     private CodeScanner mCodeScanner;
+    private LinearLayout mCameraScannerLL;
+    private CodeScannerView scannerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,27 +104,8 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         initViews();
         initListeners();
         initScannerReceiver();
+        initCameraScanner();
 
-
-        CodeScannerView scannerView = findViewById(R.id.scanner_view);
-        mCodeScanner = new CodeScanner(this, scannerView);
-        mCodeScanner.setDecodeCallback(new DecodeCallback() {
-            @Override
-            public void onDecoded(@NonNull final Result result) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MainActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-        scannerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mCodeScanner.startPreview();
-            }
-        });
 
     }
 
@@ -136,10 +127,10 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         mMyOrdersTV = findViewById(R.id.MA_my_orders_TV);
         mMyOrdersListRV = findViewById(R.id.my_orders_list_RV);
         mOrderCircleProgress = findViewById(R.id.MA_progress_bar);
+        mCameraScannerLL = findViewById(R.id.MA_camera_scann_LL);
 
 
     }
-
 
 
     @Override
@@ -155,7 +146,29 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     }
 
 
-    
+    private void initCameraScanner() {
+
+        scannerView = findViewById(R.id.scanner_view);
+        mCodeScanner = new CodeScanner(this, scannerView);
+        mCodeScanner.setDecodeCallback(new DecodeCallback() {
+            @Override
+            public void onDecoded(@NonNull final Result result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        checkIfBarcodeExist(result.getText());
+                        mCodeScanner.stopPreview();
+                        scannerView.setVisibility(View.GONE);
+                        Toast.makeText(MainActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+
+    }
+
+
     private void initRecyclerView(Orders orders) {
 
         mOrderLinear.setVisibility(View.VISIBLE);
@@ -163,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
         if (orders.getCustomer() != null) {
 
-            String clientNumber ="הזמנה: " + orders.getId();
+            String clientNumber = "הזמנה: " + orders.getId();
             mClientText.setText(clientNumber);
         }
 
@@ -191,22 +204,20 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     }
 
 
-
-
     private void setCircleProgressBar() {
 
         int ordersCompleted = 0;
 
         for (int i = 0; i < mOrdersList.size(); i++) {
 
-            if (mOrdersList.get(i).getCollectedQuantity() == mOrdersList.get(i).getOrderQuantity()){
-                ordersCompleted ++;
+            if (mOrdersList.get(i).getCollectedQuantity() == mOrdersList.get(i).getOrderQuantity()) {
+                ordersCompleted++;
             }
         }
 
-        if (ordersCompleted > 0){
-            mOrderCircleProgress.setProgress((int)((float)ordersCompleted / (float) mOrdersList.size() * 100));
-        }else {
+        if (ordersCompleted > 0) {
+            mOrderCircleProgress.setProgress((int) ((float) ordersCompleted / (float) mOrdersList.size() * 100));
+        } else {
             mOrderCircleProgress.setProgress(0);
         }
 
@@ -225,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                     (dialog, which) -> {
                         dialog.dismiss();
                         mOrderLinear.setVisibility(View.GONE);
+                        scannerView.setVisibility(View.GONE);
                         mStartButton.setVisibility(View.VISIBLE);
                         mMyOrdersTV.setVisibility(View.VISIBLE);
                     });
@@ -324,6 +336,43 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         });
 
 
+        mCameraScannerLL.setOnClickListener(view -> {
+
+            if (checkIfAlreadyHavePermission(this, Manifest.permission.CAMERA)) {
+                mCodeScanner.startPreview();
+                scannerView.setVisibility(View.VISIBLE);
+            } else {
+
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                        REQUEST_CODE_FOR_CAMERA);
+            }
+
+        });
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_FOR_CAMERA) {
+            if (resultCode == Activity.RESULT_OK) {
+                mCodeScanner.startPreview();
+                scannerView.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+
+    public static boolean checkIfAlreadyHavePermission(Context context, String... permissions) {
+        for (String permission : permissions) {
+            int result = ContextCompat.checkSelfPermission(context, permission);
+            if (result != PackageManager.PERMISSION_GRANTED)
+                return false;
+        }
+
+        return true;
     }
 
 
@@ -462,7 +511,6 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                                         });
 
                                 alertDialog.show();
-
 
 
                             }
@@ -719,12 +767,11 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                             mOrdersList.get(i).setCollectedQuantity(mOrdersList.get(i).getCollectedQuantity() + 1);
                             mOrderAdapter.notifyDataSetChanged();
 
-                            if (i == 0){
+                            if (i == 0) {
                                 mRecyclerView.smoothScrollToPosition(0);
-                            }else if (i > 0 && i < mOrdersList.size() - 1){
+                            } else if (i > 0 && i < mOrdersList.size() - 1) {
                                 mRecyclerView.smoothScrollToPosition(i + 1);
-                            }
-                            else {
+                            } else {
                                 mRecyclerView.smoothScrollToPosition(i);
 
                             }
