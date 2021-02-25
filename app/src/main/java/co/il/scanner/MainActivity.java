@@ -412,7 +412,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
     }
 
-
+    boolean paymentOrderInProgress = false;
     private void finishOrder() {
 
         if (mOrders.getStatusId() == 2) {
@@ -458,8 +458,8 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
 
             AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom).create();
-            alertDialog.setTitle("לסיים תשלום?");
-            alertDialog.setMessage("האם בטוח שברצונך לסיים תשלום?");
+            alertDialog.setTitle("ביצוע תשלום");
+            alertDialog.setMessage("האם בטוח שברצונך לחייב תשלום על הזמנה זו?");
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "כן",
                     (dialog, which) -> {
                         dialog.dismiss();
@@ -469,6 +469,11 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                         ProcessPaymentObject processPaymentObject = new ProcessPaymentObject();
                         processPaymentObject.setOrderId(mOrders.getId());
                         processPaymentObject.setUserId(mLoginUser.getId());
+                        if(paymentOrderInProgress){
+                            Toast.makeText(MainActivity.this, "ההזמנה הושלמה", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        paymentOrderInProgress =true;
 
                         RequestManager.processPayment(processPaymentObject).subscribe(new Observer<StatusMessage>() {
                             @Override
@@ -478,25 +483,41 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
                             @Override
                             public void onNext(@NonNull StatusMessage statusMessage) {
+                                paymentOrderInProgress =false;
+                                if(statusMessage.getStatus() =="ok") {
+                                    Toast.makeText(MainActivity.this, "ההזמנה הושלמה", Toast.LENGTH_LONG).show();
 
-                                Toast.makeText(MainActivity.this, "ההזמנה הושלמה", Toast.LENGTH_LONG).show();
+                                    new Handler().postDelayed(() -> {
 
-                                new Handler().postDelayed(() -> {
+                                        mOrderLinear.setVisibility(View.GONE);
+                                        mStartButton.setVisibility(View.VISIBLE);
+                                        mMyOrdersTV.setVisibility(View.VISIBLE);
+                                        mFinishedProgressBar.setVisibility(View.GONE);
 
-                                    mOrderLinear.setVisibility(View.GONE);
-                                    mStartButton.setVisibility(View.VISIBLE);
-                                    mMyOrdersTV.setVisibility(View.VISIBLE);
-                                    mFinishedProgressBar.setVisibility(View.GONE);
+                                    }, 1000);
+                                }else{
+                                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom).create();
+                                    alertDialog.setTitle("התשלום נכשל");
+                                    alertDialog.setMessage("אנא העבר את ההזמנה לטיפול מנהל");
+                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "אישור",
+                                            (dialog, which) -> {
+                                                dialog.dismiss();
+                                                mFinishedProgressBar.setVisibility(View.GONE);
+                                                mOrderLinear.setVisibility(View.GONE);
+                                                mStartButton.setVisibility(View.VISIBLE);
+                                                mMyOrdersTV.setVisibility(View.VISIBLE);
 
-                                }, 1000);
+                                            });
 
+                                    alertDialog.show();
+                                }
 
                             }
 
                             @Override
                             public void onError(@NonNull Throwable e) {
 
-
+                                paymentOrderInProgress =false;
                                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom).create();
                                 alertDialog.setTitle("התשלום נכשל");
                                 alertDialog.setMessage("אנא העבר את ההזמנה לטיפול מנהל");
@@ -517,7 +538,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
                             @Override
                             public void onComplete() {
-
+                                paymentOrderInProgress =false;
                             }
                         });
 
@@ -731,7 +752,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                     barcodeStr = intent.getExtras().getString("code");
                     mScanning.cancelAnimation();
                     checkIfBarcodeExist(barcodeStr);
-                    Toast.makeText(context, barcodeStr, Toast.LENGTH_SHORT).show();
+
                 }
             }
         };
@@ -763,6 +784,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                         if (mOrdersList.get(i).getOrderQuantity() <= mOrdersList.get(i).getCollectedQuantity()) {
                             blink(Color.RED);
                             vibrate(2000);
+
                         } else {
                             mOrdersList.get(i).setCollectedQuantity(mOrdersList.get(i).getCollectedQuantity() + 1);
                             mOrderAdapter.notifyDataSetChanged();
