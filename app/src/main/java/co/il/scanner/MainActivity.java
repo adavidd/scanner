@@ -1,14 +1,6 @@
 package co.il.scanner;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -16,14 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -33,16 +26,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.airbnb.lottie.LottieAnimationView;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
+import com.budiyev.android.codescanner.ScanMode;
 import com.dinuscxj.progressbar.CircleProgressBar;
 import com.google.zxing.Result;
 
-import java.util.ArrayList;
 import java.util.List;
-
 
 import co.il.scanner.model.CompleteOrder;
 import co.il.scanner.model.LoginUser;
@@ -94,7 +92,8 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     private CodeScanner mCodeScanner;
     private LinearLayout mCameraScannerLL;
     private CodeScannerView scannerView;
-
+    private Ringtone successBeep;
+    private Ringtone wrongBeep;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         initListeners();
         initScannerReceiver();
         initCameraScanner();
-
+        initBeeps();
 
     }
 
@@ -137,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     protected void onResume() {
         super.onResume();
         mCodeScanner.startPreview();
+
     }
 
     @Override
@@ -145,20 +145,54 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         super.onPause();
     }
 
-
+    private void initBeeps(){
+        try {
+            String uri = "android.resource://" + getPackageName() + "/" + R.raw.beep;
+            Uri notification = Uri.parse(uri);
+            successBeep = RingtoneManager.getRingtone(getApplicationContext(), notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            String uri = "android.resource://" + getPackageName() + "/" + R.raw.wrongbeep;
+            Uri notification = Uri.parse(uri);
+            wrongBeep = RingtoneManager.getRingtone(getApplicationContext(), notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private void initCameraScanner() {
 
         scannerView = findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(this, scannerView);
+        mCodeScanner.setAutoFocusEnabled(true);
+        mCodeScanner.setScanMode(ScanMode.SINGLE);
+        mCodeScanner.setTouchFocusEnabled(true);
+//        mCodeScanner.autoFocusMode  =true;
+//        mCodeScanner.scanMode = ScanMode.CONTINUOUS;
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull final Result result) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        checkIfBarcodeExist(result.getText());
-                        mCodeScanner.stopPreview();
                         scannerView.setVisibility(View.GONE);
+                        mCodeScanner.stopPreview();
+                        int delay = 500;
+                        if(checkIfBarcodeExist(result.getText())){
+                            successBeep.play();
+                            delay = 2000;
+                        }else{
+                            wrongBeep.play();
+                        }
+
+                        new Handler().postDelayed(() -> {
+                            scannerView.setVisibility(View.VISIBLE);
+                            mCodeScanner.startPreview();
+                        }, delay);
+
+
+                        //scannerView.setVisibility(View.GONE); //commented to continiue scanning
                         Toast.makeText(MainActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -220,7 +254,13 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         } else {
             mOrderCircleProgress.setProgress(0);
         }
+        if( ordersCompleted>=mOrdersList.size()){
 
+            if(scannerView.getVisibility() == View.VISIBLE){
+                mCodeScanner.stopPreview();
+                scannerView.setVisibility(View.GONE);
+            }
+        }
 
     }
 
@@ -282,7 +322,10 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
 
         mHandScanLL.setOnClickListener(view -> {
-
+            if(scannerView.getVisibility() == View.VISIBLE){
+                mCodeScanner.stopPreview();
+                scannerView.setVisibility(View.GONE);
+            }
             HandScanDialog handScanDialog = new HandScanDialog();
             handScanDialog.showDialog(MainActivity.this, MainActivity.this);
         });
@@ -339,8 +382,13 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         mCameraScannerLL.setOnClickListener(view -> {
 
             if (checkIfAlreadyHavePermission(this, Manifest.permission.CAMERA)) {
-                mCodeScanner.startPreview();
-                scannerView.setVisibility(View.VISIBLE);
+                    if(scannerView.getVisibility() == View.VISIBLE){
+                        mCodeScanner.stopPreview();
+                        scannerView.setVisibility(View.GONE);
+                    }else {
+                        mCodeScanner.startPreview();
+                        scannerView.setVisibility(View.VISIBLE);
+                    }
             } else {
 
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
@@ -768,7 +816,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     }
 
 
-    private void checkIfBarcodeExist(String barcodeStr) {
+    private boolean checkIfBarcodeExist(String barcodeStr) {
         boolean itemMatched = false;
         if (mOrdersList != null) {
 
@@ -809,9 +857,11 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
             }
             if (!itemMatched) {
+
                 vibrate(500);
             }
         }
+        return itemMatched;
 
 
     }
