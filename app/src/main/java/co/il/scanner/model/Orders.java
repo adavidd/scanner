@@ -1,7 +1,8 @@
 package co.il.scanner.model;
 
-import java.util.List;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Orders{
 
@@ -28,6 +29,9 @@ public class Orders{
 
 	@SerializedName("order_time")
 	private Object orderTime;
+
+	@SerializedName("updatedAt")
+	private String updatedAt;
 
 	@SerializedName("customer_id")
 	private int customerId;
@@ -72,6 +76,9 @@ public class Orders{
 
 	public int getCustomerId(){
 		return customerId;
+	}
+	public String getUpdatedAt(){
+		return updatedAt;
 	}
 
 	public void setForeignId(Object foreignId) {

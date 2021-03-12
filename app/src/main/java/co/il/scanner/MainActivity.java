@@ -836,14 +836,17 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                         } else {
                             mOrdersList.get(i).setCollectedQuantity(mOrdersList.get(i).getCollectedQuantity() + 1);
                             mOrderAdapter.notifyDataSetChanged();
+                            if(mOrdersList.size()<100) {
+                                if (i == 0) {
 
-                            if (i == 0) {
-                                mRecyclerView.smoothScrollToPosition(0);
-                            } else if (i > 0 && i < mOrdersList.size() - 1) {
-                                mRecyclerView.smoothScrollToPosition(i + 1);
-                            } else {
-                                mRecyclerView.smoothScrollToPosition(i);
+                                    mRecyclerView.smoothScrollToPosition(0);
 
+                                } else if (i > 0 && i < mOrdersList.size() - 1) {
+                                    mRecyclerView.smoothScrollToPosition(i + 1);
+                                } else {
+                                    mRecyclerView.smoothScrollToPosition(i);
+
+                                }
                             }
                             setCircleProgressBar();
                             UpdateServer(mOrdersList.get(i));

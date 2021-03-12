@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import co.il.scanner.R;
-import co.il.scanner.model.LoginUser;
 import co.il.scanner.model.Orders;
 
 public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHolder>{
@@ -54,6 +51,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         }
 
         holder.mOrderText.setText(myString);
+        holder.mOrderUpdateAtText.setText( " שורות:" +mOrdersList.get(position).getOrderItems().size() + " עודכן לאחרונה: " + mOrdersList.get(position).getUpdatedAt());
         holder.itemView.setOnClickListener(view -> mListener.onMyListItemClicked(mOrdersList.get(position)));
     }
 
@@ -68,11 +66,13 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
 
 
         private TextView mOrderText;
+        private TextView mOrderUpdateAtText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             mOrderText = itemView.findViewById(R.id.MOI_text);
+            mOrderUpdateAtText = itemView.findViewById(R.id.updatedAt);
         }
     }
 
