@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,7 +37,7 @@ public class LoginListAdapter extends RecyclerView.Adapter<LoginListAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        String name = mUsersList.get(position).getFirstname() + " " + mUsersList.get(position).getLastname();
+        String name =   mUsersList.get(position).getLastname() + " " +mUsersList.get(position).getFirstname();
         holder.mButtonName.setText(name);
         holder.mButtonName.setOnClickListener(view -> mListener.onItemListClicked(mUsersList.get(position)));
 

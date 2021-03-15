@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import co.il.scanner.model.OrderItemsItem;
-import co.il.scanner.model.Orders;
 
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
@@ -52,9 +51,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
             ));
             holder.mItemDescription.setText(
-                    (mOrdersItems.get(position).getItem().getSize().length()>0?" מידה:" + mOrdersItems.get(position).getItem().getSize() :"")+
+                    (mOrdersItems.get(position).getItem().getSize() !=null && mOrdersItems.get(position).getItem().getSize().length()>0?" מידה:" + mOrdersItems.get(position).getItem().getSize() :"")+
 
-                    (mOrdersItems.get(position).getItem().getColor().length()>0?" צבע: " + mOrdersItems.get(position).getItem().getColor():""));
+                    (mOrdersItems.get(position).getItem().getColor()!= null && mOrdersItems.get(position).getItem().getColor().length()>0?" צבע: " + mOrdersItems.get(position).getItem().getColor():""));
         }
 
         int itemCollectedQuantity = mOrdersItems.get(position).getCollectedQuantity();
