@@ -9,7 +9,14 @@ public class ProcessPaymentObject{
 
 	@SerializedName("order_id")
 	private int orderId;
-
+	@SerializedName("printer_id")
+	private int printerId;
+	public void setPrinterId(int printerId){
+		this.printerId = printerId;
+	}
+	public int getPrinterId(){
+		return printerId;
+	}
 	public void setUserId(int userId){
 		this.userId = userId;
 	}

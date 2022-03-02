@@ -4,71 +4,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class Item{
 
-
-
-	public void setComments(Object comments) {
-		this.comments = comments;
-	}
-
-	public void setImageUrl(Object imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
-	public void setDescription(Object description) {
-		this.description = description;
-	}
-
-	public void setWarhouseDescription(Object warhouseDescription) {
-		this.warhouseDescription = warhouseDescription;
-	}
-
-	public void setBarcode2(String barcode2) {
-		this.barcode2 = barcode2;
-	}
-
-	public void setBarcode1(String barcode1) {
-		this.barcode1 = barcode1;
-	}
-
-	public void setForeignId(Object foreignId) {
-		this.foreignId = foreignId;
-	}
-
-	public void setCreatedAt(String createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	public void setCategoryId(Object categoryId) {
-		this.categoryId = categoryId;
-	}
-
-	public void setPrice(Object price) {
-		this.price = price;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	public void setSize(String size) {
-		this.size = size;
-	}
-	public void setColor(String color) {
-		this.color = color;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public void setUpdatedAt(String updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+	@SerializedName("code")
+	private int code;
 
 	@SerializedName("comments")
 	private Object comments;
+
+	@SerializedName("color")
+	private String color;
 
 	@SerializedName("image_url")
 	private Object imageUrl;
@@ -76,8 +19,14 @@ public class Item{
 	@SerializedName("description")
 	private Object description;
 
+	@SerializedName("weight")
+	private int weight;
+
 	@SerializedName("warhouse_description")
-	private Object warhouseDescription;
+	private String warhouseDescription;
+
+	@SerializedName("type")
+	private Object type;
 
 	@SerializedName("barcode2")
 	private String barcode2;
@@ -86,7 +35,10 @@ public class Item{
 	private String barcode1;
 
 	@SerializedName("foreign_id")
-	private Object foreignId;
+	private int foreignId;
+
+	@SerializedName("item_location")
+	private Object itemLocation;
 
 	@SerializedName("createdAt")
 	private String createdAt;
@@ -94,22 +46,26 @@ public class Item{
 	@SerializedName("deleted")
 	private boolean deleted;
 
+	@SerializedName("size")
+	private String size;
+
 	@SerializedName("category_id")
 	private Object categoryId;
 
+	@SerializedName("catalog_number")
+	private int catalogNumber;
+
 	@SerializedName("price")
-	private Object price;
+	private String price;
 
 	@SerializedName("name")
 	private String name;
-	@SerializedName("size")
-	private String size;
-	@SerializedName("color")
-	private String color;
+
 	@SerializedName("id")
 	private int id;
-	@SerializedName("code")
-	private int code;
+
+	@SerializedName("phone_id")
+	private int phoneId;
 
 	@SerializedName("updatedAt")
 	private String updatedAt;
@@ -122,6 +78,10 @@ public class Item{
 		return comments;
 	}
 
+	public String getColor(){
+		return color;
+	}
+
 	public Object getImageUrl(){
 		return imageUrl;
 	}
@@ -130,8 +90,16 @@ public class Item{
 		return description;
 	}
 
-	public Object getWarhouseDescription(){
+	public int getWeight(){
+		return weight;
+	}
+
+	public String getWarhouseDescription(){
 		return warhouseDescription;
+	}
+
+	public Object getType(){
+		return type;
 	}
 
 	public String getBarcode2(){
@@ -142,8 +110,12 @@ public class Item{
 		return barcode1;
 	}
 
-	public Object getForeignId(){
+	public int getForeignId(){
 		return foreignId;
+	}
+
+	public Object getItemLocation(){
+		return itemLocation;
 	}
 
 	public String getCreatedAt(){
@@ -154,25 +126,32 @@ public class Item{
 		return deleted;
 	}
 
+	public String getSize(){
+		return size;
+	}
+
 	public Object getCategoryId(){
 		return categoryId;
 	}
 
-	public Object getPrice(){
+	public int getCatalogNumber(){
+		return catalogNumber;
+	}
+
+	public String getPrice(){
 		return price;
 	}
 
 	public String getName(){
 		return name;
 	}
-	public String getSize(){
-		return size;
-	}
-	public String getColor(){
-		return color;
-	}
+
 	public int getId(){
 		return id;
+	}
+
+	public int getPhoneId(){
+		return phoneId;
 	}
 
 	public String getUpdatedAt(){

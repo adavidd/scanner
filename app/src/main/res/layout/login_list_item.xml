@@ -6,14 +6,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-    <TextView
+        <TextView
         android:id="@+id/LLI_button_item_BTN"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:background="@color/black"
+        android:background="@drawable/round_corners"
         android:gravity="center"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="20sp"
         tools:text="David Deutsch" />
 

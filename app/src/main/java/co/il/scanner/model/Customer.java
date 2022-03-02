@@ -4,8 +4,44 @@ import com.google.gson.annotations.SerializedName;
 
 public class Customer{
 
-	@SerializedName("branchId")
-	private Object branchId;
+	@SerializedName("city")
+	private String city;
+
+	@SerializedName("cc_lastdigits")
+	private String ccLastdigits;
+
+	@SerializedName("phone2")
+	private String phone2;
+
+	@SerializedName("cc_token")
+	private String ccToken;
+
+	@SerializedName("cc_cvv")
+	private String ccCvv;
+
+	@SerializedName("cc_lastdigtis")
+	private Object ccLastdigtis;
+
+	@SerializedName("branch")
+	private Branch branch;
+
+	@SerializedName("phone1")
+	private String phone1;
+
+	@SerializedName("branch_id")
+	private int branchId;
+
+	@SerializedName("neighbourhood")
+	private Object neighbourhood;
+
+	@SerializedName("id")
+	private int id;
+
+	@SerializedName("cc_number")
+	private Object ccNumber;
+
+	@SerializedName("member_id")
+	private int memberId;
 
 	@SerializedName("firstname2")
 	private String firstname2;
@@ -14,16 +50,10 @@ public class Customer{
 	private String firstname1;
 
 	@SerializedName("address")
-	private Object address;
+	private String address;
 
 	@SerializedName("comments")
 	private Object comments;
-
-	@SerializedName("city")
-	private Object city;
-
-	@SerializedName("phone2")
-	private Object phone2;
 
 	@SerializedName("tz1")
 	private String tz1;
@@ -34,23 +64,71 @@ public class Customer{
 	@SerializedName("lastname")
 	private String lastname;
 
-	@SerializedName("phone1")
-	private Object phone1;
-
 	@SerializedName("foreign_id")
-	private Object foreignId;
+	private int foreignId;
+
+	@SerializedName("branch_comments")
+	private Object branchComments;
+
+	@SerializedName("cc_exp")
+	private String ccExp;
 
 	@SerializedName("deleted")
 	private boolean deleted;
 
-	@SerializedName("barnch_id")
-	private Object barnchId;
+	@SerializedName("phone_id")
+	private int phoneId;
 
-	@SerializedName("id")
-	private int id;
+	public String getCity(){
+		return city;
+	}
 
-	public Object getBranchId(){
+	public String getCcLastdigits(){
+		return ccLastdigits;
+	}
+
+	public String getPhone2(){
+		return phone2;
+	}
+
+	public String getCcToken(){
+		return ccToken;
+	}
+
+	public String getCcCvv(){
+		return ccCvv;
+	}
+
+	public Object getCcLastdigtis(){
+		return ccLastdigtis;
+	}
+
+	public Branch getBranch(){
+		return branch;
+	}
+
+	public String getPhone1(){
+		return phone1;
+	}
+
+	public int getBranchId(){
 		return branchId;
+	}
+
+	public Object getNeighbourhood(){
+		return neighbourhood;
+	}
+
+	public int getId(){
+		return id;
+	}
+
+	public Object getCcNumber(){
+		return ccNumber;
+	}
+
+	public int getMemberId(){
+		return memberId;
 	}
 
 	public String getFirstname2(){
@@ -61,20 +139,12 @@ public class Customer{
 		return firstname1;
 	}
 
-	public Object getAddress(){
+	public String getAddress(){
 		return address;
 	}
 
 	public Object getComments(){
 		return comments;
-	}
-
-	public Object getCity(){
-		return city;
-	}
-
-	public Object getPhone2(){
-		return phone2;
 	}
 
 	public String getTz1(){
@@ -89,23 +159,23 @@ public class Customer{
 		return lastname;
 	}
 
-	public Object getPhone1(){
-		return phone1;
+	public int getForeignId(){
+		return foreignId;
 	}
 
-	public Object getForeignId(){
-		return foreignId;
+	public Object getBranchComments(){
+		return branchComments;
+	}
+
+	public String getCcExp(){
+		return ccExp;
 	}
 
 	public boolean isDeleted(){
 		return deleted;
 	}
 
-	public Object getBarnchId(){
-		return barnchId;
-	}
-
-	public int getId(){
-		return id;
+	public int getPhoneId(){
+		return phoneId;
 	}
 }

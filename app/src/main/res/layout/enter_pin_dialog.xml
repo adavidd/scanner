@@ -13,19 +13,19 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="הזן ברקוד באמצעות המקלדת"
-        android:textAlignment="center"
+        android:text="נא הקש את הקוד שלך"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:translationY="8dp" />
 
     <ImageView
         android:layout_width="200dp"
-        android:layout_height="0dp"
+        android:layout_height="83dp"
+        android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:layout_weight="1"
-        android:layout_gravity="center"
-        android:background="@drawable/barcode" />
+        android:background="@android:drawable/ic_lock_lock"
+        android:scaleType="centerInside" />
 
     <EditText
         android:id="@+id/PCD_pincode_ET"
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="בדוק ברקוד"
+            android:text="אישור"
             android:textColor="@color/white"
             android:textSize="20sp" />
 

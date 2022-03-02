@@ -12,6 +12,11 @@ public class LoginUser implements Serializable {
 	@SerializedName("password")
 	private String password;
 
+
+
+	@SerializedName("pincode")
+	private String pincode;
+
 	@SerializedName("firstname")
 	private String firstname;
 
@@ -47,6 +52,13 @@ public class LoginUser implements Serializable {
 
 	public String getPassword(){
 		return password;
+	}
+
+	public void setPincode(String pincode){
+		this.pincode = pincode;
+	}
+	public String getPincode(){
+		return pincode;
 	}
 
 	public void setFirstname(String firstname){

@@ -1,11 +1,16 @@
 package co.il.scanner.login;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -59,7 +64,6 @@ public class LoginActivity extends AppCompatActivity implements LoginListAdapter
         mLoginListadapter = new LoginListAdapter(this, this, mUsersList);
         mRecyclerView.setAdapter(mLoginListadapter);
         if(mUsersList.size()>0){
-
             int lastUserId = this.getPreferences(Context.MODE_PRIVATE).getInt("lastUserId",0);
             if(lastUserId>0){
                 for (int i = 0; i < mUsersList.size(); i++) {
@@ -69,8 +73,6 @@ public class LoginActivity extends AppCompatActivity implements LoginListAdapter
                         }
                     }
                 }
-
-
             }
 
         }
@@ -91,7 +93,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListAdapter
 
             @Override
             public void onNext(@NonNull List<LoginUser> loginUsers) {
-
+            Log.d("chaim","got " +  loginUsers.size() + " users");
                 mProgressBar.setVisibility(View.GONE);
                 mUsersList = loginUsers;
 
@@ -116,14 +118,43 @@ public class LoginActivity extends AppCompatActivity implements LoginListAdapter
 
     @Override
     public void onItemListClicked(LoginUser loginUser) {
+//        if(loginUser.getPincode()==null){
+//            loginUser.setPincode("1234");
+//        }
 
+        if(loginUser.getPincode()!=null && loginUser.getPincode().length()>0){
+            //Toast.makeText(LoginActivity.this,   loginUser.getPincode(), Toast.LENGTH_SHORT).show();
+            final EditText input = new EditText(this);
+
+            new AlertDialog.Builder(LoginActivity.this)
+                    .setTitle("כניסת משתמש")
+                    .setMessage("הזן סיסמה:")
+                    .setView(input)
+                    .setPositiveButton("אישור", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+
+                            if(input.getText().toString().equals(loginUser.getPincode())){
+                                openUser(loginUser);
+                            }else{
+                                Toast.makeText(LoginActivity.this,  "הסיסמא שגויה", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // Do nothing.
+                }
+            }).show();
+
+        }else {
+
+            openUser(loginUser);
+        }
+    }
+    void openUser(LoginUser loginUser){
         SharedPreferences.Editor editor = this.getPreferences(Context.MODE_PRIVATE).edit();
         editor.putInt("lastUserId", loginUser.getId());
         editor.commit();
-
-
-
-
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(LOGIN_USER, loginUser);
         startActivity(intent);

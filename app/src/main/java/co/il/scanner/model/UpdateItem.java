@@ -12,7 +12,8 @@ public class UpdateItem{
 
 	@SerializedName("user_id")
 	private int userId;
-
+	@SerializedName("cart_id")
+	private int cartId;
 	@SerializedName("order_id")
 	private int orderId;
 
@@ -36,10 +37,17 @@ public class UpdateItem{
 		this.userId = userId;
 	}
 
+	public int getCartId(){
+		return cartId;
+	}
+
+	public void setCartId(int cartId){
+		this.cartId = cartId;
+	}
+
 	public int getUserId(){
 		return userId;
 	}
-
 	public void setOrderId(int orderId){
 		this.orderId = orderId;
 	}

@@ -8,12 +8,12 @@ import android.widget.EditText;
 
 import java.util.Objects;
 
-public class HandScanDialog {
+public class PincodeDialog {
 
-    private HandScanDialogListener mListener;
+    private PincodeDialogListener mListener;
 
     @SuppressLint("SetTextI18n")
-    public void showDialog(Context context, HandScanDialogListener listener) {
+    public void showDialog(Context context, PincodeDialogListener listener) {
 
         this.mListener = listener;
         final Dialog dialog = new Dialog(context);
@@ -21,7 +21,7 @@ public class HandScanDialog {
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
 
-        dialog.setContentView(R.layout.hand_scan_dialog);
+        dialog.setContentView(R.layout.enter_pin_dialog);
 
         EditText handScan = dialog.findViewById(R.id.PCD_pincode_ET);
 
@@ -29,7 +29,7 @@ public class HandScanDialog {
             @Override
             public void onClick(View view) {
 
-                mListener.onHandScanClicked(handScan.getText().toString());
+                mListener.onPinEntered(handScan.getText().toString());
             }
         });
 
@@ -38,9 +38,9 @@ public class HandScanDialog {
     }
 
 
-    public  interface HandScanDialogListener{
+    public  interface PincodeDialogListener{
 
-        void onHandScanClicked(String handScan);
+        void onPinEntered(String pinCode);
     }
 
 

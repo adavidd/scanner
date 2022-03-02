@@ -6,6 +6,8 @@ public class Status {
 
 
     @SerializedName("status")
-    private String status;
+    public String status;
+    @SerializedName("message")
+    public String message;
 
 }

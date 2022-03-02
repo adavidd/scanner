@@ -7,12 +7,12 @@ import java.util.List;
 public class StatusOrders {
 
     @SerializedName("orders")
-    private List<Orders> ordersList;
+    private List<Order> ordersList;
 
     @SerializedName("status")
     private String status;
 
-    public List<Orders> getOrdersList() {
+    public List<Order> getOrdersList() {
         return ordersList;
     }
 

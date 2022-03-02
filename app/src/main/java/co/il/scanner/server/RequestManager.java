@@ -1,12 +1,14 @@
 package co.il.scanner.server;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import co.il.scanner.model.CompleteOrder;
 import co.il.scanner.model.LoginUser;
 import co.il.scanner.model.NextOrder;
-import co.il.scanner.model.Orders;
+import co.il.scanner.model.Order;
 import co.il.scanner.model.ProcessPaymentObject;
 import co.il.scanner.model.Status;
 import co.il.scanner.model.StatusMessage;
@@ -20,21 +22,21 @@ public class RequestManager {
 
 
     public static Observable<List<LoginUser>> getUsersLoginList() {
-
+        Log.d("chaim","get users");
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
         return service.getUsersLogin()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .timeout(17, TimeUnit.SECONDS);
+                .timeout(20, TimeUnit.SECONDS);
     }
 
-    public static Observable<Orders> getOrders(int orderNumber) {
+    public static Observable<Order> getOrder(int orderNumber,int userId) {
 
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-        return service.getOrders(orderNumber)
+        return service.getOrders(orderNumber,userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .timeout(17, TimeUnit.SECONDS);
+                .timeout(20, TimeUnit.SECONDS);
     }
 
     public static Observable<NextOrder> getNextOrder(int userId, int statusId) {
@@ -77,6 +79,14 @@ public class RequestManager {
 
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
         return service.getOrdersList(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(17, TimeUnit.SECONDS);
+    }
+    public static Observable<Status> updateOrder(Order order) {
+
+        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        return service.updateOrder(order)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(17, TimeUnit.SECONDS);

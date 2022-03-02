@@ -5,7 +5,7 @@ import java.util.List;
 import co.il.scanner.model.CompleteOrder;
 import co.il.scanner.model.LoginUser;
 import co.il.scanner.model.NextOrder;
-import co.il.scanner.model.Orders;
+import co.il.scanner.model.Order;
 import co.il.scanner.model.ProcessPaymentObject;
 import co.il.scanner.model.Status;
 import co.il.scanner.model.StatusMessage;
@@ -20,17 +20,20 @@ import retrofit2.http.Query;
 
 public interface GetDataService {
 
-    @GET("/api/users")
+    @GET("/api/users/app")
     Observable<List<LoginUser>> getUsersLogin();
 
     @GET("/api/orders/{order_number}")
-    Observable<Orders> getOrders(@Path("order_number") int orderNumber);
+    Observable<Order> getOrders(@Path("order_number") int orderNumber,@Query("user_id") int userId);
 
     @GET("/api/orders/getNextOrder")
     Observable<NextOrder> getNextOrder(@Query("user_id") int userId, @Query("status_id") int statusId);
 
     @POST("/api/orders/updateItemCollection")
     Observable<Status> updateItemCollection(@Body UpdateItem updateItem);
+
+    @POST("/api/orders/updateOrder")
+    Observable<Status> updateOrder(@Body Order order);
 
     @POST("/api/orders/updateCompleteOrderCollection")
     Observable<Status> updateCompleteOrderCollection(@Body CompleteOrder completeOrder);

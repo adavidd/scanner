@@ -2,25 +2,31 @@ package co.il.scanner.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+import java.util.List;
+
 public class Order{
 
 	@SerializedName("foreign_id")
 	private Object foreignId;
 
+	@SerializedName("order_status")
+	private OrderStatus orderStatus;
+
 	@SerializedName("status_id")
 	private int statusId;
 
 	@SerializedName("comments")
-	private Object comments;
+	private String comments;
 
 	@SerializedName("deleted")
 	private boolean deleted;
 
-	@SerializedName("ordered_from")
-	private Object orderedFrom;
+	@SerializedName("open")
+	private boolean open;
 
-	@SerializedName("order_fee")
-	private String orderFee;
+	@SerializedName("ordered_from")
+	private String orderedFrom;
 
 	@SerializedName("id")
 	private int id;
@@ -28,100 +34,126 @@ public class Order{
 	@SerializedName("order_time")
 	private Object orderTime;
 
-	@SerializedName("priority")
-	private String priority;
+	@SerializedName("updatedAt")
+	private Date updatedAt;
 
 	@SerializedName("customer_id")
 	private int customerId;
-
 	@SerializedName("collecting_user_id")
-	private Object collectingUserId;
+	private Integer  collectingUserId;
+	@SerializedName("cart_id")
+	private Integer  cartId;
+	@SerializedName("order_items")
+	private List<OrderItemsItem> orderItems;
 
-	public void setForeignId(Object foreignId){
-		this.foreignId = foreignId;
-	}
+	@SerializedName("member")
+	private Member member;
+
+	@SerializedName("customer")
+	private Customer customer;
 
 	public Object getForeignId(){
 		return foreignId;
 	}
 
-	public void setStatusId(int statusId){
-		this.statusId = statusId;
+	public OrderStatus getOrderStatus(){
+		return orderStatus;
 	}
 
 	public int getStatusId(){
 		return statusId;
 	}
 
-	public void setComments(Object comments){
-		this.comments = comments;
-	}
-
-	public Object getComments(){
+	public String getComments(){
 		return comments;
-	}
-
-	public void setDeleted(boolean deleted){
-		this.deleted = deleted;
 	}
 
 	public boolean isDeleted(){
 		return deleted;
 	}
 
-	public void setOrderedFrom(Object orderedFrom){
-		this.orderedFrom = orderedFrom;
-	}
-
-	public Object getOrderedFrom(){
+	public String getOrderedFrom(){
 		return orderedFrom;
-	}
-
-	public void setOrderFee(String orderFee){
-		this.orderFee = orderFee;
-	}
-
-	public String getOrderFee(){
-		return orderFee;
-	}
-
-	public void setId(int id){
-		this.id = id;
 	}
 
 	public int getId(){
 		return id;
 	}
 
-	public void setOrderTime(Object orderTime){
-		this.orderTime = orderTime;
-	}
-
 	public Object getOrderTime(){
 		return orderTime;
-	}
-
-	public void setPriority(String priority){
-		this.priority = priority;
-	}
-
-	public String getPriority(){
-		return priority;
-	}
-
-	public void setCustomerId(int customerId){
-		this.customerId = customerId;
 	}
 
 	public int getCustomerId(){
 		return customerId;
 	}
-
-	public void setCollectingUserId(Object collectingUserId){
-		this.collectingUserId = collectingUserId;
+	public Integer getCartId(){
+		return cartId;
+	}
+	public Integer getCollectingUserId(){
+		return collectingUserId;
+	}
+	public Date getUpdatedAt(){
+		return updatedAt;
+	}
+	public Member getMember(){
+		return member;
+	}
+	public void setForeignId(Object foreignId) {
+		this.foreignId = foreignId;
 	}
 
-	public Object getCollectingUserId(){
-		return collectingUserId;
+	public void setOrderStatus(OrderStatus orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public void setStatusId(int statusId) {
+		this.statusId = statusId;
+	}
+	public void setCollectingUserId(Integer userId) {
+		this.collectingUserId = userId;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public void setOrderedFrom(String orderedFrom) {
+		this.orderedFrom = orderedFrom;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setOrderTime(Object orderTime) {
+		this.orderTime = orderTime;
+	}
+
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+	public void setCartId(int cartId) {
+		this.cartId = cartId;
+	}
+
+	public void setOrderItems(List<OrderItemsItem> orderItems) {
+		this.orderItems = orderItems;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	public List<OrderItemsItem> getOrderItems(){
+		return orderItems;
+	}
+
+	public Customer getCustomer(){
+		return customer;
 	}
 }

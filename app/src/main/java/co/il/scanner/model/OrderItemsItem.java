@@ -2,22 +2,42 @@ package co.il.scanner.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class OrderItemsItem{
+import java.util.Date;
 
-	@SerializedName("foreign_id")
-	private Object foreignId;
+public class OrderItemsItem{
 
 	@SerializedName("item")
 	private Item item;
 
 	@SerializedName("comments")
-	private Object comments;
+	private String comments;
+
+	@SerializedName("item_id")
+	private int itemId;
+
+	@SerializedName("ordered_at")
+	private Date orderedAt;
+
+	@SerializedName("unit_price")
+	private String unitPrice;
+
+	@SerializedName("collected_quantity")
+	private int collectedQuantity;
+
+	@SerializedName("line_total")
+	private double lineTotal;
+
+	@SerializedName("collected_at")
+	private Date collectedAt;
+
+	@SerializedName("foreign_id")
+	private int foreignId;
 
 	@SerializedName("deleted")
 	private boolean deleted;
 
-	@SerializedName("item_id")
-	private int itemId;
+	@SerializedName("supplied_quantity")
+	private int suppliedQuantity;
 
 	@SerializedName("order_quantity")
 	private int orderQuantity;
@@ -25,92 +45,86 @@ public class OrderItemsItem{
 	@SerializedName("id")
 	private int id;
 
+	@SerializedName("collected_by_user_id")
+	private int collectedByUserId;
+
 	@SerializedName("order_id")
 	private int orderId;
 
-	@SerializedName("collected_quantity")
-	private int collectedQuantity;
+	@SerializedName("collected_by_cart_id")
+	private int collectedByCartId;
 
-	@SerializedName("collected_at")
-	private Object collectedAt;
-
-	public Object getForeignId(){
-		return foreignId;
-	}
+	@SerializedName("phone_id")
+	private int phoneId;
 
 	public Item getItem(){
 		return item;
 	}
 
-	public Object getComments(){
+	public String getComments(){
 		return comments;
-	}
-
-	public boolean isDeleted(){
-		return deleted;
 	}
 
 	public int getItemId(){
 		return itemId;
 	}
 
-	public int getOrderQuantity(){
-		return orderQuantity;
+	public Date getOrderedAt(){
+		return orderedAt;
 	}
 
-	public void setForeignId(Object foreignId) {
-		this.foreignId = foreignId;
-	}
-
-	public void setItem(Item item) {
-		this.item = item;
-	}
-
-	public void setComments(Object comments) {
-		this.comments = comments;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	public void setItemId(int itemId) {
-		this.itemId = itemId;
-	}
-
-	public void setOrderQuantity(int orderQuantity) {
-		this.orderQuantity = orderQuantity;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public void setOrderId(int orderId) {
-		this.orderId = orderId;
-	}
-
-	public void setCollectedQuantity(int collectedQuantity) {
-		this.collectedQuantity = collectedQuantity;
-	}
-
-	public void setCollectedAt(Object collectedAt) {
-		this.collectedAt = collectedAt;
-	}
-
-	public int getId(){
-		return id;
-	}
-
-	public int getOrderId(){
-		return orderId;
+	public String getUnitPrice(){
+		return unitPrice;
 	}
 
 	public int getCollectedQuantity(){
 		return collectedQuantity;
 	}
 
-	public Object getCollectedAt(){
+	public void setCollectedQuantity(int collectedQuantity) {
+		this.collectedQuantity = collectedQuantity;
+	}
+	public Double getLineTotal(){
+		return lineTotal;
+	}
+
+	public Date getCollectedAt(){
 		return collectedAt;
+	}
+
+	public int getForeignId(){
+		return foreignId;
+	}
+
+	public boolean isDeleted(){
+		return deleted;
+	}
+
+	public int getSuppliedQuantity(){
+		return suppliedQuantity;
+	}
+
+	public int getOrderQuantity(){
+		return orderQuantity;
+	}
+
+	public int getId(){
+		return id;
+	}
+
+	public int getCollectedByUserId(){
+		return collectedByUserId;
+	}
+
+	public int getOrderId(){
+		return orderId;
+	}
+
+	public int getCollectedByCartId(){
+		return collectedByCartId;
+	}
+
+	public int getPhoneId(){
+		return phoneId;
 	}
 }

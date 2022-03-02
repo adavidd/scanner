@@ -7,6 +7,9 @@ public class OrderStatus{
 	@SerializedName("createdAt")
 	private String createdAt;
 
+	@SerializedName("color")
+	private String color;
+
 	@SerializedName("name")
 	private String name;
 
@@ -18,6 +21,10 @@ public class OrderStatus{
 
 	public String getCreatedAt(){
 		return createdAt;
+	}
+
+	public String getColor(){
+		return color;
 	}
 
 	public String getName(){
