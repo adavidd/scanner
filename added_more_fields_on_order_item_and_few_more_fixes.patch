@@ -1,0 +1,106 @@
+Index: app/src/main/java/co/il/scanner/OrderAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/co/il/scanner/OrderAdapter.java	(revision bd204be8e716303d80659a10940ae09425f37051)
++++ app/src/main/java/co/il/scanner/OrderAdapter.java	(date 1613879048841)
+@@ -61,12 +61,12 @@
+ 
+         holder.mItemCount.setText(itemCollectedQuantity + "/" + itemOrderQuantity);
+ 
+-        if (itemCollectedQuantity == itemOrderQuantity) {
+-            holder.mItemCount.setVisibility(View.GONE);
++        if (itemCollectedQuantity >= itemOrderQuantity) {
++//            holder.mItemCount.setVisibility(View.GONE);
+             holder.mItemDone.setVisibility(View.VISIBLE);
+         } else {
+ 
+-            holder.mItemCount.setVisibility(View.VISIBLE);
++//            holder.mItemCount.setVisibility(View.VISIBLE);
+             holder.mItemDone.setVisibility(View.GONE);
+         }
+ 
+Index: app/src/main/res/layout/order_item.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/order_item.xml	(revision bd204be8e716303d80659a10940ae09425f37051)
++++ app/src/main/res/layout/order_item.xml	(date 1613879118911)
+@@ -18,10 +18,11 @@
+             android:id="@+id/OI_text_count_TV"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+-            android:textSize="18sp"
+-            android:layout_centerInParent="true"
++            android:layout_centerInParent="false"
++            android:layout_centerHorizontal="true"
+             android:textColor="@color/white"
+-            tools:text="0/2"/>
++            android:textSize="18sp"
++            tools:text="0/2" />
+ 
+ 
+         <ImageView
+@@ -49,7 +50,7 @@
+             android:layout_alignParentTop="true"
+             android:layout_centerHorizontal="true"
+             android:layout_gravity="top"
+-            android:layout_marginTop="10dp"
++            android:layout_marginTop="1dp"
+             android:gravity="center"
+             android:textColor="#FFFFFF"
+             android:textSize="20sp"
+@@ -61,12 +62,12 @@
+             android:layout_height="wrap_content"
+             android:layout_below="@+id/OI_item_name_TV"
+             android:layout_gravity="center"
+-            android:layout_marginTop="10dp"
++            android:layout_marginTop="3dp"
+             android:gravity="center"
+ 
+ 
+             android:textColor="#FFFFFF"
+-            android:textSize="18sp"
++            android:textSize="15sp"
+             tools:text="ספר קודש" />
+         <TextView
+             android:id="@+id/OI_item_description_TV"
+@@ -74,12 +75,12 @@
+             android:layout_height="wrap_content"
+             android:layout_below="@+id/OI_item_code_TV"
+             android:layout_gravity="center"
+-            android:layout_marginTop="10dp"
++            android:layout_marginTop="3dp"
+             android:gravity="center"
+ 
+ 
+             android:textColor="#FFFFFF"
+-            android:textSize="18sp"
++            android:textSize="15sp"
+             tools:text="ספר קודש" />
+ 
+     </RelativeLayout>
+Index: app/src/main/res/layout/my_orders_item.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/my_orders_item.xml	(revision bd204be8e716303d80659a10940ae09425f37051)
++++ app/src/main/res/layout/my_orders_item.xml	(date 1613877585263)
+@@ -11,12 +11,11 @@
+         android:id="@+id/MOI_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_gravity="center"
+         android:layout_centerInParent="true"
++        android:layout_gravity="center"
+         android:gravity="center"
+-        android:textSize="20sp"/>
++        android:textSize="20sp" />
+ 
+-
+     <View
+         android:layout_width="match_parent"
+         android:layout_height="7dp"
