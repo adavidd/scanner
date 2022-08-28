@@ -9,6 +9,12 @@
             name="view_State"
             type="int" />
         <variable
+            name="mLoginUser"
+            type="com.shapira.collectorscanner.model.LoginUser" />
+        <variable
+            name="mPallet"
+            type="com.shapira.collectorscanner.model.Pallet" />
+        <variable
             name="show_camera_scan_btn"
             type="boolean" />
         <variable
@@ -19,6 +25,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    <LinearLayout
+        android:id="@+id/LL_Pallet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="@{view_State == 3 || view_State == 4?View.VISIBLE:View.GONE}">
+        <RelativeLayout
+            android:id="@+id/RL_Pallet_Title"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/bottom_round_corners">
+            <TextView
+                android:id="@+id/PalletTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/packageCounterText"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:foregroundGravity="left"
+                android:text="10"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/PalletSubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="55sp"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:text="@{`סניף: ` + mPallet.branch.name}"
+                android:textStyle="bold" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/PalletPackagesRV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+    </LinearLayout>
 
 
     <LinearLayout
@@ -234,7 +295,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="280dp"
+        android:layout_marginTop="220dp"
         android:background="@drawable/round_corners"
         android:paddingStart="20dp"
         android:paddingTop="5dp"
@@ -252,10 +313,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:layout_marginTop="450dp"
+        android:layout_marginTop="400dp"
         android:background="@drawable/round_corners"
         android:backgroundTint="@color/gray_border"
-        android:textColor="@color/teal_700"
         android:paddingStart="18dp"
         android:paddingTop="2dp"
         android:paddingEnd="18dp"
@@ -263,11 +323,30 @@
         android:text="סריקת עגלה להמשך ליקוט"
         android:textAlignment="center"
 
+        android:textColor="@color/teal_700"
         android:textSize="18sp"
         android:visibility="@{view_State ==0? View.VISIBLE : View.GONE}" />
 
 
+    <TextView
+        android:id="@+id/scanPallet"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="480dp"
+        android:background="@drawable/round_corners"
+        android:backgroundTint="@color/gray_border"
+        android:paddingStart="18dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="5dp"
+        android:text="סריקת משטח"
+        android:textAlignment="center"
 
+        android:textColor="@color/teal_700"
+        android:textSize="18sp"
+        android:visibility="@{view_State ==0 &amp;&amp; mLoginUser.role>=2? View.VISIBLE : View.GONE}" />/7
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/MA_animationView_LAV"
@@ -353,7 +432,7 @@
             android:id="@+id/UserNameTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="שם משתמש"
+            android:text="@{mLoginUser.firstname + ` ` +  mLoginUser.lastname}"
             android:textAlignment="center"
             android:textColor="@color/black"
 
