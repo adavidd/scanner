@@ -1190,6 +1190,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                 if (inCollectionMode()) {
                     barcodeStr = intent.getExtras().getString("code");
                     mScanning.cancelAnimation();
+
                     checkIfBarcodeExist(barcodeStr);
                 }
             }
@@ -1285,7 +1286,9 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         binding.packageCounterText.setText(String.valueOf(mPallet.getPackages().size()));
     }
     private boolean checkIfBarcodeExist(String barcodeStr) {
-        boolean itemMatched = false;
+        //ast.makeText(this,barcodeStr,Toast.LENGTH_SHORT);
+        barcodeStr = barcodeStr.replaceAll("\\s+","").replace("*","").replace("*","");
+       boolean itemMatched = false;
         if (mOrdersList != null) {
 
             for (int i = 0; i < mOrdersList.size(); i++) {
@@ -1322,13 +1325,16 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
                         }
                         break;
+                    }else{
+
+
                     }
                 }
 
 
             }
             if (!itemMatched) {
-
+                Toast.makeText(this,barcodeStr,Toast.LENGTH_SHORT);
                 vibrate(500);
             }
         }
