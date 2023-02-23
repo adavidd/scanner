@@ -1058,7 +1058,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             public void onNext(@NonNull Order order) {
 
 
-                List<OrderItemsItem> filteredList =  order.getOrderItems().stream().filter(c->!c.getItem().isHide_in_app()).collect(Collectors.toList());
+                List<OrderItemsItem> filteredList =  order.getOrderItems().stream().filter(c->c.getItem() != null && !c.getItem().isHide_in_app()).collect(Collectors.toList());
                 order.setOrderItems(filteredList);
                 mOrder = order;
 //                view_State = ORDER_VIEW_STATE;
@@ -1298,7 +1298,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                     String barcode1 = mOrdersList.get(i).getItem().getBarcode1();
                     String barcode2 = mOrdersList.get(i).getItem().getBarcode2();
 
-                    if (barcode1 != null && barcode1.equals(barcodeStr) || barcode2 != null && barcode2.equals(barcodeStr)) {
+                    if (barcode1 != null && barcode1.replaceAll("\\s+","").replace("*","").replace("*","").equals(barcodeStr) || barcode2 != null && barcode2.replaceAll("\\s+","").replace("*","").replace("*","").equals(barcodeStr)) {
                         itemMatched = true;
                         if (mOrdersList.get(i).getOrderQuantity() <= mOrdersList.get(i).getCollectedQuantity()) {
                             blink(Color.RED);
@@ -1334,7 +1334,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
             }
             if (!itemMatched) {
-                Toast.makeText(this,barcodeStr,Toast.LENGTH_SHORT);
+                //Toast.makeText(this,barcodeStr,Toast.LENGTH_SHORT);
                 vibrate(500);
             }
         }

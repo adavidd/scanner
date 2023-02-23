@@ -74,7 +74,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         }
 
 
-        holder.mOrderLinesText.setText(" שורות:" + mOrdersList.get(position).getOrderItems().stream().filter(c->!c.getItem().isHide_in_app()).collect(Collectors.toList()).size());
+        holder.mOrderLinesText.setText(" שורות:" + mOrdersList.get(position).getOrderItems().stream().filter(c-> c.getItem()!=null && !c.getItem().isHide_in_app()).collect(Collectors.toList()).size());
         holder.itemView.setOnClickListener(view -> mListener.onMyListItemClicked(mOrdersList.get(position)));
         holder.mOrderNumberTV.setText(" מס' הזמנה:" + mOrdersList.get(position).getId());
     }

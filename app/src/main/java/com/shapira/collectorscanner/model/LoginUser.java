@@ -12,7 +12,8 @@ public class LoginUser implements Serializable {
 	@SerializedName("password")
 	private String password;
 
-
+	@SerializedName("avatar_url")
+	private String avatar_url;
 
 	@SerializedName("pincode")
 	private String pincode;
@@ -44,6 +45,12 @@ public class LoginUser implements Serializable {
 
 	public String getCreatedAt(){
 		return createdAt;
+	}
+	public String getAvaratUrl(){
+		return avatar_url;
+	}
+	public void setAvatarUrl(String avatar_url){
+		this.avatar_url = avatar_url;
 	}
 
 	public void setPassword(String password){

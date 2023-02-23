@@ -46,6 +46,8 @@ public interface GetDataService {
 
     @POST("/api/orders/updateItemCollection")
     Observable<Status> updateItemCollection(@Body UpdateItem updateItem);
+    @POST("/api/users/updateUserAppLogin")
+    Observable<Status> updateUserAppLogin(@Body LoginUser loginUser);
 
     @POST("/api/orders/updateOrder")
     Observable<Status> updateOrder(@Body Order order);

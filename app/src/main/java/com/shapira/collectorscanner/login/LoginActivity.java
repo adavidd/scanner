@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,9 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.labters.lottiealertdialoglibrary.DialogTypes;
+import com.labters.lottiealertdialoglibrary.LottieAlertDialog;
 import com.shapira.collectorscanner.MainActivity;
 import com.shapira.collectorscanner.R;
 import com.shapira.collectorscanner.model.LoginUser;
+import com.shapira.collectorscanner.model.Status;
 import com.shapira.collectorscanner.server.RequestManager;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
@@ -59,12 +63,14 @@ public class LoginActivity extends AppCompatActivity implements LoginListAdapter
 
 
     private void initRecyclerView() {
-
+        int lastUserId = this.getPreferences(Context.MODE_PRIVATE).getInt("lastUserId",0);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mLoginListadapter = new LoginListAdapter(this, this, mUsersList);
+        mLoginListadapter = new LoginListAdapter(this, this, mUsersList,lastUserId);
+        mLoginListadapter.setHasStableIds(true);
         mRecyclerView.setAdapter(mLoginListadapter);
+
         if(mUsersList.size()>0){
-            int lastUserId = this.getPreferences(Context.MODE_PRIVATE).getInt("lastUserId",0);
+
             if(lastUserId>0){
                 for (int i = 0; i < mUsersList.size(); i++) {
                     if (mUsersList.get(i).getId() >0) {
@@ -157,6 +163,27 @@ public class LoginActivity extends AppCompatActivity implements LoginListAdapter
     }
     void openUser(LoginUser loginUser){
         SharedPreferences.Editor editor = this.getPreferences(Context.MODE_PRIVATE).edit();
+        RequestManager.updateUserAppLogin(loginUser).subscribe(new Observer<Status>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull Status status) {
+
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
         editor.putInt("lastUserId", loginUser.getId());
         editor.commit();
         Intent intent = new Intent(this, MainActivity.class);

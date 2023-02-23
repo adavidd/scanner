@@ -1,20 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
+    android:padding="5dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:background="@drawable/round_corners"
+    android:id="@+id/itemLL"
     xmlns:tools="http://schemas.android.com/tools">
 
 
+        <ImageView
+            android:id="@+id/avatarImg"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+
+             />
+
         <TextView
-        android:id="@+id/LLI_button_item_BTN"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:background="@drawable/round_corners"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        tools:text="David Deutsch" />
+            android:id="@+id/LLI_button_item_BTN"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_weight="10"
+
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            tools:text="David Deutsch" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
 
 </LinearLayout>

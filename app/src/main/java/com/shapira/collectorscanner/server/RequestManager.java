@@ -56,7 +56,14 @@ public class RequestManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(17, TimeUnit.SECONDS);
     }
+    public static Observable<Status> updateUserAppLogin(LoginUser loginUser) {
 
+        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        return service.updateUserAppLogin(loginUser)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(17, TimeUnit.SECONDS);
+    }
     public static Observable<Status> updateItemCollection(UpdateItem updateItem) {
 
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
