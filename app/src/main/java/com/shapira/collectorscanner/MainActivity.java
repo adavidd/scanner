@@ -1211,8 +1211,8 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             if(barcodeStr.startsWith("MALBUSHEY") && barcodeStr.endsWith("PACKAGE")){
 
                 int package_id= Integer.parseInt(barcodeStr.substring(0, barcodeStr.length() - 7).substring(9));
-//                Toast.makeText(this, "מס חבילה" + package_id,Toast.LENGTH_LONG).show();
-
+                Toast.makeText(this, " מס חבילה" + package_id,Toast.LENGTH_LONG).show();
+                mProgressBar.setVisibility(View.VISIBLE);
                 RequestManager.checkPackageAndAssign(new PackageScan(package_id,mPallet.getId(),mLoginUser.getId())).subscribe(new Observer<Status>() {
 
                     @Override
@@ -1232,11 +1232,12 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                             wrongBeep.play();
                             Toast.makeText(MainActivity.this,status.message,Toast.LENGTH_LONG).show();
                         }
+                        mProgressBar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        mProgressBar.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -1287,6 +1288,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     }
     private boolean checkIfBarcodeExist(String barcodeStr) {
         //ast.makeText(this,barcodeStr,Toast.LENGTH_SHORT);
+        String origBarcodeStr = barcodeStr;
         barcodeStr = barcodeStr.replaceAll("\\s+","").replace("*","").replace("*","");
        boolean itemMatched = false;
         if (mOrdersList != null) {
@@ -1335,6 +1337,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             }
             if (!itemMatched) {
                 //Toast.makeText(this,barcodeStr,Toast.LENGTH_SHORT);
+                Toast.makeText(this,origBarcodeStr,Toast.LENGTH_SHORT);
                 vibrate(500);
             }
         }
