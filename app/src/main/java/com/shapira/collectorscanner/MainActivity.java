@@ -322,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         Log.d("chaim", "order " + order.toString());
         initOrderRecyclerView(order);
         if (order.getStatusId() > 2) {
-
+            initOrderRecyclerView(order);
             return;
         }
         LottieAlertDialog.Builder alert = new LottieAlertDialog.Builder(MainActivity.this, DialogTypes.TYPE_CUSTOM, "cart_1.json");
@@ -676,7 +676,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             @Override
             public void onNext(@NonNull StatusOrders statusOrders) {
                 getOrdersListProgressDialog.dismiss();
-                if (statusOrders.getOrdersList().size() > 0) {
+                if (statusOrders.getOrdersList()!=null && statusOrders.getOrdersList().size() > 0) {
 //                    view_State = ORDERS_LIST_STATE;
                     binding.setViewState(ORDERS_LIST_STATE);
                     mMyOrdersListRV.setVisibility(View.VISIBLE);

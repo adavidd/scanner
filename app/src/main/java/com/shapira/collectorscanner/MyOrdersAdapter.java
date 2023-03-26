@@ -97,6 +97,11 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         }
         holder.itemView.setOnClickListener(view -> mListener.onMyListItemClicked(mOrdersList.get(position)));
         holder.mOrderNumberTV.setText(" מס' הזמנה:" + mOrdersList.get(position).getId());
+        holder.mMemberTV.setText(mOrdersList.get(position).getMember()!=null? mOrdersList.get(position).getMember().getLastName() +
+                "  " + mOrdersList.get(position).getMember().getHusbandFirst() +
+                " " + mOrdersList.get(position).getMember().getWifeFirst()+
+                " - " + mOrdersList.get(position).getMember().getOrganizationName()
+                :"");
     }
 
     @Override
@@ -115,11 +120,13 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         private TextView mOrderUpdateAtText;
         private TextView mOrderLinesText;
         private TextView mPercentTV;
+        private TextView mMemberTV;
         private TextView mOrderNumberTV;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mPercentTV = itemView.findViewById(R.id.percentTV);
+            mMemberTV = itemView.findViewById(R.id.memberTV);
             mOrderLinesText = itemView.findViewById(R.id.linesTV);
             mOrderUpdateAtText = itemView.findViewById(R.id.updatedAt);
             mOrderText = itemView.findViewById(R.id.MOI_text);

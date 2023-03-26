@@ -87,6 +87,8 @@ public class Member{
 
 	@SerializedName("last_name")
 	private String lastName;
+	@SerializedName("organization_name")
+	private String organizationName;
 
 	@SerializedName("created_by_user_id")
 	private int createdByUserId;
@@ -243,7 +245,9 @@ public class Member{
 	public String getWifeFirst(){
 		return wifeFirst;
 	}
-
+	public String getOrganizationName(){
+		return organizationName;
+	}
 	public String getHusbandPhone(){
 		return husbandPhone;
 	}
