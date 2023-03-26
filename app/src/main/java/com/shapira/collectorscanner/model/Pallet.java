@@ -14,9 +14,12 @@ public class Pallet {
         @SerializedName("branch_id")
         private int branchId;
 
+        @SerializedName("organization_id")
+        private int organziationId;
         @SerializedName("branch")
         private Branch branch;
-
+    @SerializedName("organizaion")
+    private Organization organizaion;
         @SerializedName("packages")
         private List<Package> packages;
     public int getId() {
@@ -27,17 +30,27 @@ public class Pallet {
         this.id = id;
     }
 
-
-    public int setBranchId() {
+    public int getOrganziationId() {
         return branchId;
     }
 
-    public void getBranchId(int branchId) {
+    public void setOrganziationId(int organziationId) {
+        this.organziationId = organziationId;
+    }
+
+    public int getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(int branchId) {
         this.branchId = branchId;
     }
 
     public Branch getBranch() {
         return branch;
+    }
+    public Organization getOrganziation() {
+        return organizaion;
     }
     public List<Package> getPackages() {
         return packages;

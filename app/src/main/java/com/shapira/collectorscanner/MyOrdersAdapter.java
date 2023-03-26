@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
@@ -29,7 +30,10 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         this.mListener = listener;
         this.mOrdersList = ordersList;
     }
-
+    @Override
+    public long getItemId(int position) {
+        return  this.mOrdersList.get(position).getId();
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -38,20 +42,25 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         return new ViewHolder(view);
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         StringBuilder myString = new StringBuilder();
 //        myString.append(" מס' הזמנה:" + mOrdersList.get(position).getId()).append(" \n\n");
         if (mOrdersList.get(position).getStatusId() == 1 || mOrdersList.get(position).getStatusId() == 2) {
-            myString.append("בתהליך ליקוט").append(" \n\n");
+            //myString.append("בתהליך ליקוט").append(" \n\n");
             holder.mRelativeLayout.setBackgroundColor(Color.parseColor("#fcfc0a"));
         } else if (mOrdersList.get(position).getStatusId() == 3) {
-            myString.append("ממתין לתשלום").append(" \n\n");
+            //myString.append("ממתין לתשלום").append(" \n\n");
             holder.mRelativeLayout.setBackgroundColor(Color.parseColor("#f5aa42"));
         } else if (mOrdersList.get(position).getStatusId() == 4) {
             holder.mRelativeLayout.setBackgroundColor(Color.parseColor("#0afc5f"));
-            myString.append("הזמנה הושלמה").append(" \n\n");
+           // myString.append("הזמנה הושלמה").append(" \n\n");
+        }else if (mOrdersList.get(position).getStatusId() == 5) {
+            holder.mRelativeLayout.setBackgroundColor(Color.parseColor("#0afc5f"));
+            // myString.append("הזמנה הושלמה").append(" \n\n");
         } else {
             holder.mRelativeLayout.setBackgroundColor(Color.parseColor("#e8e8e3"));
         }
@@ -59,7 +68,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
 
             myString.append(mOrdersList.get(position).getOrderedFrom()).append(" \n\n");
         }
-
+        myString.append(mOrdersList.get(position).getOrderStatus().getName()).append(" \n\n");
         holder.mOrderText.setText(myString);
 //        mOrdersList.get(position).getUpdatedAt()
 
@@ -74,7 +83,18 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         }
 
 
-        holder.mOrderLinesText.setText(" שורות:" + mOrdersList.get(position).getOrderItems().stream().filter(c-> c.getItem()!=null && !c.getItem().isHide_in_app()).collect(Collectors.toList()).size());
+        //holder.mOrderLinesText.setText(" שורות:" + mOrdersList.get(position).getOrderItems().stream().filter(c-> c.getItem()!=null && !c.getItem().isHide_in_app()).collect(Collectors.toList()).size());
+        holder.mOrderLinesText.setText(" שורות שנותרו:" + mOrdersList.get(position).getNotCollectedLines() + " מתוך " + mOrdersList.get(position).getLines());
+        int collected =mOrdersList.get(position).getCollectedLines();
+        int lines = mOrdersList.get(position).getLines();
+        float  percent =(float) collected/lines * 100;
+        holder.mPercentTV.setText("" + Math.round(percent) + "%");
+        if(mOrdersList.get(position).getNotCollectedLines()>0){
+            holder.mOrderLinesText.setTextColor(Color.RED);
+            holder.mPercentTV.setTextColor(Color.RED);
+        }else{
+            holder.mPercentTV.setTextColor(ContextCompat.getColor(mContext, R.color.order_item_gray));
+        }
         holder.itemView.setOnClickListener(view -> mListener.onMyListItemClicked(mOrdersList.get(position)));
         holder.mOrderNumberTV.setText(" מס' הזמנה:" + mOrdersList.get(position).getId());
     }
@@ -90,17 +110,22 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
 
         private TextView mOrderText;
         private RelativeLayout mRelativeLayout;
+
+
         private TextView mOrderUpdateAtText;
         private TextView mOrderLinesText;
+        private TextView mPercentTV;
         private TextView mOrderNumberTV;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            mPercentTV = itemView.findViewById(R.id.percentTV);
             mOrderLinesText = itemView.findViewById(R.id.linesTV);
             mOrderUpdateAtText = itemView.findViewById(R.id.updatedAt);
             mOrderText = itemView.findViewById(R.id.MOI_text);
             mOrderNumberTV = itemView.findViewById(R.id.orderNumberTV);
             mRelativeLayout = itemView.findViewById(R.id.rl);
+
         }
     }
 

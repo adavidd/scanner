@@ -104,12 +104,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
         }else {
 
-            holder.mItemCountRL.setBackground(ContextCompat.getDrawable(mContext, R.color.order_item_gray));
+            holder.mItemCountRL.setBackground(ContextCompat.getDrawable(mContext, R.color.order_item_red));
         }
 
 
     }
-
+    @Override
+    public long getItemId(int position) {
+        return  this.mOrdersItems.get(position).getId();
+    }
     @Override
     public int getItemCount() {
         if (mOrdersItems == null){

@@ -19,7 +19,12 @@ public class Order{
 	@SerializedName("comments")
 	private String comments;
 
-
+	@SerializedName("lines")
+	private int lines;
+	@SerializedName("collected_lines")
+	private int collected_lines;
+	@SerializedName("not_collected_lines")
+	private int not_collected_lines;
 
 	@SerializedName("open")
 	private boolean open;
@@ -53,6 +58,15 @@ public class Order{
 
 	public Object getForeignId(){
 		return foreignId;
+	}
+	public int getLines(){
+		return lines;
+	}
+	public int getCollectedLines(){
+		return collected_lines;
+	}
+	public int getNotCollectedLines(){
+		return not_collected_lines;
 	}
 
 	public OrderStatus getOrderStatus(){

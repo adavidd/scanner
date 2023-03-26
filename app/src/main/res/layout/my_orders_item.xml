@@ -36,15 +36,27 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
         >
+        <TextView
+            android:id="@+id/percentTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
 
+            android:textAlignment="viewStart"
+            android:textSize="17sp"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="@+id/linesTV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/linesTV" />
         <TextView
             android:id="@+id/linesTV"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="24dp"
             android:textAlignment="viewEnd"
             android:textSize="17sp"
+            android:text=""
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

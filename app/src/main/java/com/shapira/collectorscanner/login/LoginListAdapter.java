@@ -59,7 +59,7 @@ public class LoginListAdapter extends RecyclerView.Adapter<LoginListAdapter.View
             holder.mItemLL.setBackgroundResource(R.color.teal_200);
         }
         String url = mUsersList.get(position).getAvaratUrl();
-        if(url.length()>0) {
+        if(url!=null && url.length()>0) {
             if(url.endsWith("svg")){
 
                 //GlideToVectorYou.justLoadImage(mContext, url, holder.mAvatarImgView);

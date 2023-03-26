@@ -67,7 +67,7 @@
                 android:textAlignment="center"
                 android:textSize="20sp"
                 android:textColor="@color/white"
-                android:text="@{`סניף: ` + mPallet.branch.name}"
+                android:text="@{`ארגון: ` + mPallet.organziation.name}"
                 android:textStyle="bold" />
         </RelativeLayout>
         <RelativeLayout

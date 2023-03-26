@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     Date lastUserInteraction;
     Date lastItemCollection;
     String versionName;
+    BroadcastReceiver palletBroadCastReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -253,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         alert.setNegativeListener((lottieAlertDialog -> {
             lottieAlertDialog.dismiss();
             binding.setViewState(INITIAL_USER_STATE);
+
         }));
 
         LottieAlertDialog palletScanAlert = alert.build();
@@ -260,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         palletScanAlert.setCanceledOnTouchOutside(false);
         palletScanAlert.show();
         Context activityContext = this;
-        BroadcastReceiver palletBroadCastReceiver = new BroadcastReceiver() {
+         palletBroadCastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
 
@@ -300,11 +302,11 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                         activityContext.unregisterReceiver(this);
 
                     } catch (NumberFormatException ex) {
-                        Toast.makeText(getApplicationContext(), "הברקוד שנסרק אינו ברקוד משטח תקין", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "הברקוד " +palletBarcodeStr  +" שנסרק אינו ברקוד משטח תקין", Toast.LENGTH_LONG).show();
                     }
                 } else {
 //                        cartScanAlert.
-                    Toast.makeText(getApplicationContext(), "הברקוד שנסרק אינו ברקוד משטח תקין", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),  " הברקוד" + palletBarcodeStr +  " שנסרק אינו ברקוד משטח תקין", Toast.LENGTH_LONG).show();
                 }
 
 
@@ -431,6 +433,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mOrderAdapter = new OrderAdapter(this, this, mOrdersList);
+        mOrderAdapter.setHasStableIds(true);
         mRecyclerView.setAdapter(mOrderAdapter);
 
         if (order.getStatusId() == 3) {
@@ -502,6 +505,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         }else if(binding.getViewState() == PALLET_SCAN_STATE){
             binding.setViewState(INITIAL_USER_STATE);
             scannerView.setVisibility(View.GONE);
+            this.unregisterReceiver(palletBroadCastReceiver);
         } else if (mMyOrdersListRV.getVisibility() == View.VISIBLE) {
 
             mMyOrdersListRV.setVisibility(View.GONE);
@@ -678,7 +682,10 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                     mMyOrdersListRV.setVisibility(View.VISIBLE);
                     mMyOrdersListRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                     mMyOrdersAdapter = new MyOrdersAdapter(MainActivity.this, MainActivity.this, statusOrders.getOrdersList());
+                    mMyOrdersAdapter.setHasStableIds(true);
+
                     mMyOrdersListRV.setAdapter(mMyOrdersAdapter);
+
                 } else {
                     Toast.makeText(MainActivity.this, "אין היסטוריית הזמנות", Toast.LENGTH_SHORT).show();
                 }
@@ -1289,7 +1296,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     private boolean checkIfBarcodeExist(String barcodeStr) {
         //ast.makeText(this,barcodeStr,Toast.LENGTH_SHORT);
         String origBarcodeStr = barcodeStr;
-        barcodeStr = barcodeStr.replaceAll("\\s+","").replace("*","").replace("*","");
+        barcodeStr = barcodeStr.replaceAll("\\s+","").replace("*","").replace("*","").replace("/J","").replace("/j","");;
        boolean itemMatched = false;
         if (mOrdersList != null) {
 
