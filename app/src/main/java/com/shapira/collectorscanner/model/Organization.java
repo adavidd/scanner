@@ -2,9 +2,10 @@ package com.shapira.collectorscanner.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Organization {
+public class Organization implements Serializable {
 
 
 

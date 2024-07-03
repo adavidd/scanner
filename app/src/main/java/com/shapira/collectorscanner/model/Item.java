@@ -2,7 +2,9 @@ package com.shapira.collectorscanner.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Item{
+import java.io.Serializable;
+
+public class Item implements Serializable {
 
 	@SerializedName("code")
 	private int code;

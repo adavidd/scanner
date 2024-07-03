@@ -12,7 +12,7 @@ android {
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 27
         versionCode 2
-        versionName "1.1.21"
+        versionName "1.1.31"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -23,6 +23,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField 'String', 'BASE_URL', '"https://mk.liveraiser.co.il/"'
             buildConfigField 'String', 'API_TOKEN', '"nklqh123nk1!nwerqewrqnjlnSDFASD@!#CDASsad"'
+
         }
         debug {
             buildConfigField 'String', 'BASE_URL', '"https://mk.liveraiser.co.il/"'
@@ -52,6 +53,7 @@ dependencies {
 //    implementation 'com.github.mejdi14:Flat-Dialog-Android:1.0.5'
     implementation 'com.google.android.material:material:latset'
 
+    implementation 'com.github.chnouman:AwesomeDialog:1.0.5'
 
     implementation 'com.github.2coffees1team:GlideToVectorYou:v2.0.0'
 

@@ -40,7 +40,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int p) {
+        final int position  = holder.getAdapterPosition();
 
         if (mOrdersItems.get(position).getItem() != null) {
 

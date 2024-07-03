@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -21,6 +22,7 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -116,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     private CodeScannerView scannerView;
     private Ringtone successBeep;
     private Ringtone wrongBeep;
+    private Ringtone buzzerBeep;
     //    int view_State = 0;
     ActivityMainBinding binding;
     int IDLE_DELAY_SECONDS =30;
@@ -197,6 +200,13 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             String uri = "android.resource://" + getPackageName() + "/" + R.raw.wrongbeep;
             Uri notification = Uri.parse(uri);
             wrongBeep = RingtoneManager.getRingtone(getApplicationContext(), notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            String uri = "android.resource://" + getPackageName() + "/" + R.raw.buzzer;
+            Uri notification = Uri.parse(uri);
+            buzzerBeep = RingtoneManager.getRingtone(getApplicationContext(), notification);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -322,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         Log.d("chaim", "order " + order.toString());
         initOrderRecyclerView(order);
         if (order.getStatusId() > 2) {
-            initOrderRecyclerView(order);
+//            initOrderRecyclerView(order);
             return;
         }
         LottieAlertDialog.Builder alert = new LottieAlertDialog.Builder(MainActivity.this, DialogTypes.TYPE_CUSTOM, "cart_1.json");
@@ -433,8 +443,10 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mOrderAdapter = new OrderAdapter(this, this, mOrdersList);
+
         mOrderAdapter.setHasStableIds(true);
         mRecyclerView.setAdapter(mOrderAdapter);
+
 
         if (order.getStatusId() == 3) {
 
@@ -539,7 +551,12 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
 
         });
-
+        binding.OrgOrdersListTV.setOnClickListener(view -> {
+//            startActivity(new Intent(this, OrgOrdersList.class));
+            Intent intent = new Intent(this, OrgOrdersListActivity.class);
+            intent.putExtra(LOGIN_USER, mLoginUser);
+            startActivity(intent);
+        });
 
         mClientboxRL.setOnClickListener(view -> {
 
@@ -588,8 +605,34 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "כן",
                             (dialog, which) -> {
                                 dialog.dismiss();
-                                mFinishdOrderRL.setBackground(ContextCompat.getDrawable(this, R.color.teal_700));
-                                finishOrder();
+                                final EditText input = new EditText(this);
+                                input.setSingleLine(true);
+                                input.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+                                new AlertDialog.Builder(MainActivity.this)
+                                        .setTitle("אישור סיום הזמנה")
+                                        .setMessage("הזן קוד:")
+                                        .setView(input)
+
+                                        .setPositiveButton("אישור", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+
+
+                                                if(input.getText().toString().equals("1212")){
+                                                    //openUser(loginUser);
+                                                    mFinishdOrderRL.setBackground(ContextCompat.getDrawable(MainActivity.this, R.color.teal_700));
+
+                                                    finishOrder();
+                                                }else{
+                                                    Toast.makeText(MainActivity.this,  "הקוד שגוי", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        }).setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                // Do nothing.
+                                            }
+                                        }).show();
+
 
                             });
 
@@ -682,6 +725,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                     mMyOrdersListRV.setVisibility(View.VISIBLE);
                     mMyOrdersListRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                     mMyOrdersAdapter = new MyOrdersAdapter(MainActivity.this, MainActivity.this, statusOrders.getOrdersList());
+
                     mMyOrdersAdapter.setHasStableIds(true);
 
                     mMyOrdersListRV.setAdapter(mMyOrdersAdapter);
@@ -975,7 +1019,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
         for (int i = 0; i < mOrdersList.size(); i++) {
 
-            if (mOrdersList.get(i).getCollectedQuantity() != mOrdersList.get(i).getOrderQuantity()) {
+            if (mOrdersList.get(i).getCollectedQuantity() != mOrdersList.get(i).getOrderQuantity() && !mOrdersList.get(i).getItem().isHide_in_app() ) {
 
                 finishedAllCollections = false;
             }
@@ -1068,6 +1112,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                 List<OrderItemsItem> filteredList =  order.getOrderItems().stream().filter(c->c.getItem() != null && !c.getItem().isHide_in_app()).collect(Collectors.toList());
                 order.setOrderItems(filteredList);
                 mOrder = order;
+
 //                view_State = ORDER_VIEW_STATE;
 
 
@@ -1203,10 +1248,11 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             }
         };
 
+        //unregisterReceiver(broadcastReceiver);
         IntentFilter filter = new IntentFilter();
         filter.addAction(SCAN_ACTION_RCV);
         registerReceiver(broadcastReceiver, filter);
-
+        //unregisterReceiver(broadcastReceiver1);
         IntentFilter filter1 = new IntentFilter();
         filter1.addAction(SCAN_ACTION_ZKC);
         registerReceiver(broadcastReceiver1, filter1);
@@ -1236,7 +1282,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                         }else{
                             vibrate(2*1000);
                             blink(Color.RED);
-                            wrongBeep.play();
+                            buzzerBeep.play();
                             Toast.makeText(MainActivity.this,status.message,Toast.LENGTH_LONG).show();
                         }
                         mProgressBar.setVisibility(View.GONE);
@@ -1468,11 +1514,12 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
     @Override
     public void onMinusClicked(OrderItemsItem orderItemsItem) {
-
-        orderItemsItem.setCollectedQuantity(orderItemsItem.getCollectedQuantity() - 1);
-        mOrderAdapter.notifyDataSetChanged();
-        setCircleProgressBar();
-        UpdateServer(orderItemsItem);
+        if(orderItemsItem.getCollectedQuantity() > 0) {
+            orderItemsItem.setCollectedQuantity(orderItemsItem.getCollectedQuantity() - 1);
+            mOrderAdapter.notifyDataSetChanged();
+            setCircleProgressBar();
+            UpdateServer(orderItemsItem);
+        }
     }
 
 

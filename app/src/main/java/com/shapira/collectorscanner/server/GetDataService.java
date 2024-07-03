@@ -13,6 +13,10 @@ import com.shapira.collectorscanner.model.Status;
 import com.shapira.collectorscanner.model.StatusMessage;
 import com.shapira.collectorscanner.model.StatusOrders;
 import com.shapira.collectorscanner.model.UpdateItem;
+import com.shapira.collectorscanner.model.UpdateOrderStaus;
+import com.shapira.collectorscanner.model.orgorder.OrgOrder;
+import com.shapira.collectorscanner.model.orgorder.OrgOrderItemsItem;
+
 import io.reactivex.Observable;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -46,8 +50,10 @@ public interface GetDataService {
 
     @POST("/api/orders/updateItemCollection")
     Observable<Status> updateItemCollection(@Body UpdateItem updateItem);
+
     @POST("/api/users/updateUserAppLogin")
     Observable<Status> updateUserAppLogin(@Body LoginUser loginUser);
+
 
     @POST("/api/orders/updateOrder")
     Observable<Status> updateOrder(@Body Order order);
@@ -60,4 +66,14 @@ public interface GetDataService {
 
     @GET("/api/orders")
     Observable<StatusOrders> getOrdersList(@Query("user_id") int userId);
+    @GET("/api/orgorders/")
+    Observable<List<OrgOrder>> getOrgOrdersList(@Query("user_id") int userId);
+    @GET("/api/orgorders/{org_order_id}")
+    Observable<OrgOrder> getOrgOrder(@Path("org_order_id") int orgOrderId, @Query("status_id") int statusId, @Query("user_id") int userId);
+    @POST("/api/orgorders/updateItemCollection")
+    Observable<Status> updateOrgOrderItemCollection(@Body UpdateItem updateItem);
+    @POST("/api/orgorders/printOrder")
+    Observable<Status> printOrgOrder(@Body UpdateItem updateItem);
+    @POST("/api/orgorders/updateOrgOrderStatus")
+    Observable<Status> updateOrgOrderStatus(@Body UpdateOrderStaus updateOrderStaus);
 }

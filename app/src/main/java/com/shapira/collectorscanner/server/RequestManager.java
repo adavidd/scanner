@@ -16,6 +16,10 @@ import com.shapira.collectorscanner.model.Status;
 import com.shapira.collectorscanner.model.StatusMessage;
 import com.shapira.collectorscanner.model.StatusOrders;
 import com.shapira.collectorscanner.model.UpdateItem;
+import com.shapira.collectorscanner.model.UpdateOrderStaus;
+import com.shapira.collectorscanner.model.orgorder.OrgOrder;
+import com.shapira.collectorscanner.model.orgorder.OrgOrderItemsItem;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -72,6 +76,14 @@ public class RequestManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(17, TimeUnit.SECONDS);
     }
+    public static Observable<Status> updateOrgOrderItemCollection(UpdateItem updateItem) {
+
+        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        return service.updateOrgOrderItemCollection(updateItem)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(17, TimeUnit.SECONDS);
+    }
     public static Observable<Status> checkPackageAndAssign(PackageScan  package_scan) {
 
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
@@ -121,10 +133,51 @@ public class RequestManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(17, TimeUnit.SECONDS);
     }
+    public static Observable<List<OrgOrder>> getOrgOrdersList(int userId) {
+
+        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        return service.getOrgOrdersList(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(17, TimeUnit.SECONDS);
+    }
+    public static Observable<OrgOrder> getOrgOrder(int orgOrderId,int statusId,int userId) {
+
+        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        return service.getOrgOrder(orgOrderId,statusId,userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(17, TimeUnit.SECONDS);
+    }
     public static Observable<Status> updateOrder(Order order) {
 
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
         return service.updateOrder(order)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(17, TimeUnit.SECONDS);
+    }
+    public static Observable<Status> printOrgOrder(int order_id) {
+
+        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        UpdateItem  ut =new UpdateItem();
+        ut.setOrderId(order_id);
+        return service.printOrgOrder(ut)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(17, TimeUnit.SECONDS);
+    }
+    public static Observable<Status> updateOrgOrderStatus(int order_id,int status_id,int user_id) {
+
+
+
+        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        UpdateOrderStaus updateOrderStaus = new UpdateOrderStaus();
+        updateOrderStaus.order_id = order_id;
+        updateOrderStaus.status_id = status_id;
+        updateOrderStaus.user_id = user_id;
+
+        return service.updateOrgOrderStatus(updateOrderStaus)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(17, TimeUnit.SECONDS);

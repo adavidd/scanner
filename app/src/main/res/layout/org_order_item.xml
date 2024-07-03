@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:clickable="true"
+        android:elevation="5dp"
+        android:layout_margin="7dp"
+        android:padding="5dp"
+        android:focusable="true" android:checkable="true">
+
+
+<RelativeLayout
+    android:id="@+id/rl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical"
+    >
+    <net.steamcrafted.materialiconlib.MaterialIconView
+        android:id="@+id/printIcon"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+
+        android:layout_alignParentBottom="true"
+        app:layout_constraintRight_toRightOf="parent"
+
+        app:materialIcon="printer"
+        tools:ignore="MissingConstraints" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/orderNumberTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginTop="5dp"
+
+        tools:text="מספר הזמנה"
+        android:textAlignment="textStart"
+        android:layout_weight="1"
+        android:textSize="15sp" />
+        <TextView
+            android:id="@+id/orderTimeTV"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="5dp"
+
+            android:textAlignment="textEnd"
+            tools:text="12:00"
+            android:textSize="15sp" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/orgNameTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="30dp"
+
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="25sp"
+        tools:text="שם ארגון" />
+    <TextView
+        android:id="@+id/statusTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="58dp"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        tools:text="סטטוס" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layoutDirection="rtl"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/itemNumberTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textAlignment="center"
+                tools:text="50 ארגזים"
+                android:layout_weight="1"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/linesNumberTV"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textAlignment="center"
+                tools:text="50 שורות"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="7dp"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:background="@color/white" />-->
+</RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

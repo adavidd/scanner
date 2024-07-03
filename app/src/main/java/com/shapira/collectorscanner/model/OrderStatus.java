@@ -2,7 +2,9 @@ package com.shapira.collectorscanner.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class OrderStatus{
+import java.io.Serializable;
+
+public class OrderStatus implements Serializable {
 
 	@SerializedName("createdAt")
 	private String createdAt;

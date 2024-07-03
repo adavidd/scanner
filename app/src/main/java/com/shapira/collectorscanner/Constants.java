@@ -3,6 +3,7 @@ package com.shapira.collectorscanner;
 public class Constants {
 
     public static final String LOGIN_USER = "LOGIN_USER";
+    public static final String ORG_ORDER = "ORDER_ID";
 
 
     public static final int INITIAL_USER_STATE = 0;
