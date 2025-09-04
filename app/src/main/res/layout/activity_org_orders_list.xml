@@ -28,28 +28,44 @@
             app:layout_constraintTop_toTopOf="parent">
 
         </TextView>
-
-        <net.steamcrafted.materialiconlib.MaterialIconView
+        <ImageView
             android:id="@+id/materialIconView"
             android:layout_width="38dp"
             android:layout_height="38dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:materialIcon="domain"
-            tools:ignore="MissingConstraints" />
-
-        <net.steamcrafted.materialiconlib.MaterialIconView
+            android:src="@drawable/domain"
+            />
+<!--        <net.steamcrafted.materialiconlib.MaterialIconView-->
+<!--            android:id="@+id/materialIconView"-->
+<!--            android:layout_width="38dp"-->
+<!--            android:layout_height="38dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:materialIcon="domain"-->
+<!--            tools:ignore="MissingConstraints" />-->
+        <ImageView
             android:id="@+id/materialIconReturn"
             android:layout_width="38dp"
             android:layout_height="38dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:materialIcon="chevron_right"
-            tools:ignore="MissingConstraints"
-
+            android:src="@drawable/chevron_right"
             />
+<!--        <net.steamcrafted.materialiconlib.MaterialIconView-->
+<!--            android:id="@+id/materialIconReturn"-->
+<!--            android:layout_width="38dp"-->
+<!--            android:layout_height="38dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:materialIcon="chevron_right"-->
+<!--            tools:ignore="MissingConstraints"-->
+
+<!--            />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.recyclerview.widget.RecyclerView

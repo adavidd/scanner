@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -205,7 +206,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListAdapter
             final EditText input = new EditText(this);
             input.setSingleLine(true);
             input.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
+input.setInputType(InputType.TYPE_CLASS_NUMBER);
 
             new AlertDialog.Builder(LoginActivity.this)
                     .setTitle("כניסת משתמש")

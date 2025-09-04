@@ -55,32 +55,38 @@
             </LinearLayout>
 
 
-
-            <net.steamcrafted.materialiconlib.MaterialIconView
+            <ImageView
                 android:id="@+id/materialIconReturn"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:materialIcon="chevron_right"
-                tools:ignore="MissingConstraints"
+                android:src="@drawable/chevron_right"
+                 />
 
-                />
-
-            <com.dinuscxj.progressbar.CircleProgressBar
+            <com.mikhaellopez.circularprogressbar.CircularProgressBar
                 android:id="@+id/MA_progress_bar"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:progress_end_color="@color/teal_700"
-                app:progress_start_color="@color/teal_700"
-                app:progress_stroke_width="3dp"
-                app:progress_text_color="@android:color/black"
-                app:style="solid_line" />
+                app:cpb_background_progressbar_color="@color/order_item_orange"
+                app:cpb_progressbar_width="3dp"
+                />
+            <TextView
+                android:id="@+id/MA_progress_bar_text_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/MA_progress_bar"
+                app:layout_constraintBottom_toBottomOf="@id/MA_progress_bar"
+                app:layout_constraintStart_toStartOf="@id/MA_progress_bar"
+                app:layout_constraintEnd_toEndOf="@id/MA_progress_bar"
+                android:textColor="@color/black"
+                tools:text="50"
+                android:textSize="23sp"
+                ></TextView>
         </androidx.constraintlayout.widget.ConstraintLayout>
         <RelativeLayout
             android:layout_weight="20"

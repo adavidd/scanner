@@ -12,6 +12,7 @@ import com.shapira.collectorscanner.model.Order;
 import com.shapira.collectorscanner.model.PackageScan;
 import com.shapira.collectorscanner.model.Pallet;
 import com.shapira.collectorscanner.model.ProcessPaymentObject;
+import com.shapira.collectorscanner.model.Settings;
 import com.shapira.collectorscanner.model.Status;
 import com.shapira.collectorscanner.model.StatusMessage;
 import com.shapira.collectorscanner.model.StatusOrders;
@@ -42,6 +43,15 @@ public class RequestManager {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(20, TimeUnit.SECONDS);
+    }
+    public static Observable<Status> printSticker(int order_id,int printer_id) {
+
+        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+         return service.printSticker(order_id,printer_id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(20, TimeUnit.SECONDS);
+//        return;
     }
     public static Observable<Order> getOrder(int orderNumber,int userId) {
 
@@ -149,6 +159,14 @@ public class RequestManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(17, TimeUnit.SECONDS);
     }
+    public static Observable<Settings> getSettings() {
+
+        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        return service.getSettings()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(17, TimeUnit.SECONDS);
+    }
     public static Observable<Status> updateOrder(Order order) {
 
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
@@ -157,6 +175,7 @@ public class RequestManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(17, TimeUnit.SECONDS);
     }
+
     public static Observable<Status> printOrgOrder(int order_id) {
 
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);

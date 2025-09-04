@@ -18,7 +18,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.os.Vibrator;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -41,14 +43,17 @@ import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.budiyev.android.codescanner.ScanMode;
-import com.dinuscxj.progressbar.CircleProgressBar;
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.google.zxing.Result;
 import com.labters.lottiealertdialoglibrary.ClickListener;
 import com.labters.lottiealertdialoglibrary.DialogTypes;
 import com.labters.lottiealertdialoglibrary.LottieAlertDialog;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.shapira.collectorscanner.databinding.ActivityMainBinding;
@@ -62,11 +67,13 @@ import com.shapira.collectorscanner.model.Package;
 import com.shapira.collectorscanner.model.PackageScan;
 import com.shapira.collectorscanner.model.Pallet;
 import com.shapira.collectorscanner.model.ProcessPaymentObject;
+import com.shapira.collectorscanner.model.Settings;
 import com.shapira.collectorscanner.model.Status;
 import com.shapira.collectorscanner.model.StatusMessage;
 import com.shapira.collectorscanner.model.StatusOrders;
 import com.shapira.collectorscanner.model.UpdateItem;
 import com.shapira.collectorscanner.server.RequestManager;
+import com.shapira.collectorscanner.utility.BarcodeString;
 import com.shapira.collectorscanner.utility.Device;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
@@ -83,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         MyOrdersAdapter.MyOrdersAdapterListener,
         PackagesAdapter.PackageAdapterListener
 {
-
+    BarcodeString barcodeString = new BarcodeString();
     private final static String SCAN_ACTION_RCV = "scan.rcv.message";
     private final static String SCAN_ACTION_ZKC = "com.zkc.scancode";
     private static final int START_COLLECT = 2;
@@ -112,13 +119,14 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
     private RecyclerView mMyOrdersListRV;
     private MyOrdersAdapter mMyOrdersAdapter;
     private PackagesAdapter mPackageAdapter;
-    private CircleProgressBar mOrderCircleProgress;
+    private CircularProgressBar mOrderCircleProgress;
     private CodeScanner mCodeScanner;
     private LinearLayout mCameraScannerLL;
     private CodeScannerView scannerView;
     private Ringtone successBeep;
     private Ringtone wrongBeep;
     private Ringtone buzzerBeep;
+    private Ringtone BeepBarcode;
     //    int view_State = 0;
     ActivityMainBinding binding;
     int IDLE_DELAY_SECONDS =30;
@@ -168,6 +176,11 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 //        mMyOrdersTV = findViewById(R.id.MA_my_orders_TV);
         mMyOrdersListRV = findViewById(R.id.my_orders_list_RV);
         mOrderCircleProgress = findViewById(R.id.MA_progress_bar);
+        TextView progressTV = findViewById(R.id.MA_progress_bar_text_TV);
+        mOrderCircleProgress.setOnProgressChangeListener(progress -> {
+            progressTV.setText(((int) Math.round(progress)) + "%");
+            return null;
+        });
         mCameraScannerLL = findViewById(R.id.MA_camera_scann_LL);
 
 //        binding.UserNameTv.setText(mLoginUser.getFirstname() + " " + mLoginUser.getLastname());
@@ -210,6 +223,13 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            String uri = "android.resource://" + getPackageName() + "/" + R.raw.beepbarcode;
+            Uri notification = Uri.parse(uri);
+            BeepBarcode = RingtoneManager.getRingtone(getApplicationContext(), notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initCameraScanner() {
@@ -234,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                             successBeep.play();
                             delay = 2000;
                         } else {
-                            wrongBeep.play();
+                            buzzerBeep.play();
                         }
 
                         new Handler().postDelayed(() -> {
@@ -275,18 +295,20 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
          palletBroadCastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
-
-                String palletBarcodeStr;
-                byte[] barocode = intent.getByteArrayExtra("barocode");
-                int barocodelen = intent.getIntExtra("length", 0);
-                byte temp = intent.getByteExtra("barcodeType", (byte) 0);
-//                android.util.Log.i("debug", "----codetype--" + temp);
-                palletBarcodeStr = new String(barocode, 0, barocodelen);
-//                    Log.d("chaim","cartBarcode "  +cartbarcodeStr);
+                BeepBarcode.play();
+                String palletBarcodeStr =barcodeString.getBarcodeFromIntent(context,intent);
+                boolean isBarcodePallet =  false;
+                if (palletBarcodeStr.endsWith("PLT") && palletBarcodeStr.startsWith("MK")) {
+                    isBarcodePallet = true;
+                    palletBarcodeStr = palletBarcodeStr.substring(0, palletBarcodeStr.length() - 3).substring(2);
+                }
                 if (palletBarcodeStr.endsWith("PALLET") && palletBarcodeStr.startsWith("MALBUSHEY")) {
+                    palletBarcodeStr = palletBarcodeStr.substring(0, palletBarcodeStr.length() - 6).substring(9);
+                    isBarcodePallet = true;
+                }
+                if (isBarcodePallet) {
                     try {
-                        palletBarcodeStr = palletBarcodeStr.substring(0, palletBarcodeStr.length() - 6).substring(9);
+
                         RequestManager.getPallet(Integer.parseInt(palletBarcodeStr),mLoginUser.getId()).subscribe(new Observer<Pallet>() {
                             @Override
                             public void onSubscribe(Disposable d) {
@@ -365,22 +387,16 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         BroadcastReceiver cartBroadCastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
-
-                String cartbarcodeStr;
-                byte[] barocode = intent.getByteArrayExtra("barocode");
-                int barocodelen = intent.getIntExtra("length", 0);
-                byte temp = intent.getByteExtra("barcodeType", (byte) 0);
-//                android.util.Log.i("debug", "----codetype--" + temp);
-                cartbarcodeStr = new String(barocode, 0, barocodelen);
-//                    Log.d("chaim","cartBarcode "  +cartbarcodeStr);
-                if (cartbarcodeStr.endsWith("CART") && cartbarcodeStr.startsWith("MALBUSHEY")) {
+                String cartbarcodeStr =barcodeString.getBarcodeFromIntent(context,intent);
+                if ((cartbarcodeStr.endsWith("CART") ) && (cartbarcodeStr.startsWith("MALBUSHEY"))) {
                     try {
+                        successBeep.play();
                         cartbarcodeStr = cartbarcodeStr.substring(0, cartbarcodeStr.length() - 4);
                         cartbarcodeStr = cartbarcodeStr.substring(9);
                         int cart_id = Integer.parseInt(cartbarcodeStr);
                         mOrder.setCartId(cart_id);
                         order.setCartId(cart_id);
+                        postOrderToSever(mOrder); //תופסת לקביעת מספר עגלה פעיל
                         initOrderRecyclerView(order);
                         cartScanAlert.dismiss();
 //                        LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
@@ -392,6 +408,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                     }
                 } else {
 //                        cartScanAlert.
+                    buzzerBeep.play();
                     Toast.makeText(getApplicationContext(), "הברקוד שנסרק אינו ברקוד עגלה תקין", Toast.LENGTH_LONG).show();
                 }
 
@@ -405,6 +422,8 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
 
     }
+
+
     private void  postOrderToSever(Order order){
         RequestManager.updateOrder(order).subscribe(new Observer<Status>() {
             @Override
@@ -533,8 +552,26 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         }
 
     }
-
+Settings mSettings;
     private void initListeners() {
+        RequestManager.getSettings().subscribe(new Observer<Settings>() {
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+            public void onComplete() {
+
+            }
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull Settings settings) {
+                mSettings = settings;
+            }
+        });
         binding.scanPallet.setOnClickListener(view->{
             getPalletBarcode();
         });
@@ -572,14 +609,35 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         });
 
         mHandScanLL.setOnClickListener(view -> {
+
             if (scannerView.getVisibility() == View.VISIBLE) {
                 mCodeScanner.stopPreview();
                 scannerView.setVisibility(View.GONE);
             }
-            HandScanDialog handScanDialog = new HandScanDialog();
+            final EditText input = new EditText(MainActivity.this);
+            input.setSingleLine(true);
+            input.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            input.setInputType(InputType.TYPE_CLASS_NUMBER);
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("הזנת ברקוד ידנית")
+                    .setMessage("הזן סיסמת מנהל:")
+                    .setView(input)
+                    .setPositiveButton("אישור", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
 
+                            if (input.getText().toString().equals(mSettings.order_complete_password)) {
+                                HandScanDialog handScanDialog = new HandScanDialog();
+                                handScanDialog.showDialog(MainActivity.this, MainActivity.this);
+                            } else {
+                                Toast.makeText(MainActivity.this, "הקוד שגוי", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }).setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Do nothing.
+                        }
+                    }).show();
 
-            handScanDialog.showDialog(MainActivity.this, MainActivity.this);
 
         });
 
@@ -604,11 +662,26 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                     alertDialog.setMessage("לא השלמת את כל הליקוט. בטוח שברצונך לסיים?");
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "כן",
                             (dialog, which) -> {
+                        RequestManager.getSettings().subscribe(new Observer<Settings>() {
+                            @Override
+                            public void onError(@NonNull Throwable e) {
+
+                            }
+                            public void onComplete() {
+
+                            }
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(@NonNull Settings settings) {
                                 dialog.dismiss();
-                                final EditText input = new EditText(this);
+                                final EditText input = new EditText(MainActivity.this);
                                 input.setSingleLine(true);
                                 input.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
+                                input.setInputType(InputType.TYPE_CLASS_NUMBER);
                                 new AlertDialog.Builder(MainActivity.this)
                                         .setTitle("אישור סיום הזמנה")
                                         .setMessage("הזן קוד:")
@@ -618,13 +691,13 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                                             public void onClick(DialogInterface dialog, int whichButton) {
 
 
-                                                if(input.getText().toString().equals("1212")){
+                                                if (input.getText().toString().equals(settings.order_complete_password)) {
                                                     //openUser(loginUser);
                                                     mFinishdOrderRL.setBackground(ContextCompat.getDrawable(MainActivity.this, R.color.teal_700));
 
                                                     finishOrder();
-                                                }else{
-                                                    Toast.makeText(MainActivity.this,  "הקוד שגוי", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(MainActivity.this, "הקוד שגוי", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }).setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
@@ -632,7 +705,12 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                                                 // Do nothing.
                                             }
                                         }).show();
+                            }
 
+
+
+
+                        });
 
                             });
 
@@ -738,7 +816,11 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             @Override
             public void onError(@NonNull Throwable e) {
                 getOrdersListProgressDialog.dismiss();
-                Toast.makeText(MainActivity.this, "תקלה בשליפת הזמנות", Toast.LENGTH_SHORT).show();
+                try {
+                    Toast.makeText(MainActivity.this, "תקלה בשליפת הזמנות", Toast.LENGTH_SHORT).show();
+                }catch (Exception ee){
+                    ee.getStackTrace();
+                }
             }
 
             @Override
@@ -825,13 +907,10 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                         BroadcastReceiver printerBroadCastReceiver = new BroadcastReceiver() {
                             @Override
                             public void onReceive(Context context, Intent intent) {
-                                String cartbarcodeStr;
-                                byte[] barocode = intent.getByteArrayExtra("barocode");
-                                int barocodelen = intent.getIntExtra("length", 0);
-                                byte temp = intent.getByteExtra("barcodeType", (byte) 0);
-                                cartbarcodeStr = new String(barocode, 0, barocodelen);
+                                String cartbarcodeStr = barcodeString.getBarcodeFromIntent(context,intent);
                                 if (cartbarcodeStr.endsWith("PRINT") && cartbarcodeStr.startsWith("MALBUSHEY")) {
                                     try {
+                                        successBeep.play();
                                         cartbarcodeStr = cartbarcodeStr.substring(0, cartbarcodeStr.length() - 5);
 
                                         cartbarcodeStr = cartbarcodeStr.substring(9);
@@ -847,6 +926,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                                     }
                                 } else {
 //                        cartScanAlert.
+                                    buzzerBeep.play();
                                     Toast.makeText(getApplicationContext(), "הברקוד שנסרק אינו ברקוד עגלה תקין", Toast.LENGTH_LONG).show();
                                 }
 
@@ -912,17 +992,18 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                     alert.setDescription(" סיבה:" + statusMessage.getMessage());
                     alert.setTitle( "התשלום עבר בהצלחה, ההזמנה הושלמה!");
 //                    alert.setNegativeButtonColor(Color.parseColor("#9e035d"));
-                    alert.setPositiveListener((lottieAlertDialog -> {
-                        lottieAlertDialog.dismiss();
-                        binding.setViewState(INITIAL_USER_STATE);
-                        mFinishedProgressBar.setVisibility(View.GONE);
-
+                    alert.setPositiveListener((lad -> {
+                        lad.dismiss();
+//                        binding.setViewState(INITIAL_USER_STATE);
+//                        mFinishedProgressBar.setVisibility(View.GONE);
+                        showStickerDialog(mOrder.getId(),printer_id);
                     }));
 
                     LottieAlertDialog PaymentSuccessdAlert = alert.build();
                     PaymentSuccessdAlert.setCancelable(false);
                     PaymentSuccessdAlert.setCanceledOnTouchOutside(false);
                     PaymentSuccessdAlert.show();
+
 
 
 //                    Toast.makeText(MainActivity.this, "התשלום עבר בהצלחה, ההזמנה הושלמה ", Toast.LENGTH_LONG).show();
@@ -944,11 +1025,10 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                     alert.setTitle( "התשלום נכשל אנא העבר את ההזמנה לטיפול מנהל");
 
                     alert.setPositiveText("אישור");
-                    alert.setPositiveListener((lottieAlertDialog -> {
-                        lottieAlertDialog.dismiss();
-                        mFinishedProgressBar.setVisibility(View.GONE);
-
-                        binding.setViewState(INITIAL_USER_STATE);
+                    alert.setPositiveListener((lad -> {
+                        lad.dismiss();
+                        
+                        showStickerDialog(mOrder.getId(),printer_id);
                     }));
 
                     LottieAlertDialog PaymentFailedAlert = alert.build();
@@ -1010,6 +1090,56 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         });
 
 
+    }
+
+    private void showStickerDialog(int order_id,int printer_id) {
+        LottieAlertDialog.Builder strickerAlert = new LottieAlertDialog.Builder(MainActivity.this, DialogTypes.TYPE_CUSTOM, "credit-card-success.json");
+        strickerAlert.setTitle( "?האם תרצו מדבקה נוספת");
+        strickerAlert.setNegativeButtonColor(Color.parseColor("#9e035d"));
+        strickerAlert.setPositiveButtonColor(Color.parseColor("#9e021d"));
+        strickerAlert.setNegativeText("לא תודה");
+        strickerAlert.setPositiveText("כן");
+        strickerAlert.setNegativeTextColor(-1);
+        strickerAlert.setPositiveTextColor(-1);
+        strickerAlert.setPositiveListener((lad -> {
+            lad.dismiss();
+            RequestManager.printSticker(order_id,printer_id).subscribe(new Observer<Status>() {
+                @Override
+                public void onSubscribe(@NonNull Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(@NonNull Status s) {
+                    showStickerDialog(order_id,printer_id);
+                }
+                @Override
+                public void onError(@NonNull Throwable e) {
+
+                }
+                @Override
+                public void onComplete() {}
+            });
+
+
+
+
+
+        }));
+        strickerAlert.setNegativeListener(lad -> {
+            lad.dismiss();
+
+            binding.setViewState(INITIAL_USER_STATE);
+            mFinishedProgressBar.setVisibility(View.GONE);
+
+        });
+
+        LottieAlertDialog StickerAlert = strickerAlert.build();
+
+        StickerAlert.setCancelable(true);
+        StickerAlert.setCanceledOnTouchOutside(false);
+
+        StickerAlert.show();
     }
 
 
@@ -1221,11 +1351,8 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                byte[] barocode = intent.getByteArrayExtra("barocode");
-                int barocodelen = intent.getIntExtra("length", 0);
-                byte temp = intent.getByteExtra("barcodeType", (byte) 0);
-                android.util.Log.i("debug", "----codetype--" + temp);
-                barcodeStr = new String(barocode, 0, barocodelen);
+
+                barcodeStr = barcodeString.getBarcodeFromIntent(context,intent);
                 mScanning.cancelAnimation();
                     if (inCollectionMode()) {
                         checkIfBarcodeExist(barcodeStr);
@@ -1261,9 +1388,9 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
 
     private int checkPackageBracodeAndAssign(String barcodeStr){
             int result =0;
-            if(barcodeStr.startsWith("MALBUSHEY") && barcodeStr.endsWith("PACKAGE")){
+            if(barcodeStr.startsWith("MK") && barcodeStr.endsWith("PKG")){
 
-                int package_id= Integer.parseInt(barcodeStr.substring(0, barcodeStr.length() - 7).substring(9));
+                int package_id= Integer.parseInt(barcodeStr.substring(0, barcodeStr.length() - 3).substring(2));
                 Toast.makeText(this, " מס חבילה" + package_id,Toast.LENGTH_LONG).show();
                 mProgressBar.setVisibility(View.VISIBLE);
                 RequestManager.checkPackageAndAssign(new PackageScan(package_id,mPallet.getId(),mLoginUser.getId())).subscribe(new Observer<Status>() {
@@ -1358,6 +1485,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                         if (mOrdersList.get(i).getOrderQuantity() <= mOrdersList.get(i).getCollectedQuantity()) {
                             blink(Color.RED);
                             vibrate(2000);
+                            buzzerBeep.play();
 
                         } else {
                             mOrdersList.get(i).setCollectedQuantity(mOrdersList.get(i).getCollectedQuantity() + 1);
@@ -1377,6 +1505,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
                             setCircleProgressBar();
                             UpdateServer(mOrdersList.get(i));
                             blink(Color.GREEN);
+                            successBeep.play();
 
                         }
                         break;
@@ -1391,6 +1520,7 @@ public class MainActivity extends AppCompatActivity implements OrderAdapter.Orde
             if (!itemMatched) {
                 //Toast.makeText(this,barcodeStr,Toast.LENGTH_SHORT);
                 Toast.makeText(this,origBarcodeStr,Toast.LENGTH_SHORT);
+                buzzerBeep.play();
                 vibrate(500);
             }
         }

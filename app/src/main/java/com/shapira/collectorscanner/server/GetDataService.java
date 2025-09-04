@@ -5,6 +5,7 @@ import java.util.List;
 import com.shapira.collectorscanner.model.CompleteOrder;
 import com.shapira.collectorscanner.model.LoginUser;
 import com.shapira.collectorscanner.model.NextOrder;
+import com.shapira.collectorscanner.model.Settings;
 import com.shapira.collectorscanner.model.Order;
 import com.shapira.collectorscanner.model.PackageScan;
 import com.shapira.collectorscanner.model.Pallet;
@@ -34,6 +35,8 @@ public interface GetDataService {
 
         @GET("/api/pallets/{pallet_id}")
     Observable<Pallet> getPallet(@Path("pallet_id") int pallet_id, @Query("user_id") int userId);
+    @GET("/api/orders/printSticker")
+    Observable<Status>  printSticker(@Query("order_id") int order_id ,@Query("printer_id") int printer_id);
 
     @GET("/api/packages/getByPallet")
     Observable<Pallet> getPalletPackages(@Query("pallet_id") int pallet_id);
@@ -76,4 +79,6 @@ public interface GetDataService {
     Observable<Status> printOrgOrder(@Body UpdateItem updateItem);
     @POST("/api/orgorders/updateOrgOrderStatus")
     Observable<Status> updateOrgOrderStatus(@Body UpdateOrderStaus updateOrderStaus);
+    @GET("/api/settings")
+    Observable<Settings> getSettings();
 }

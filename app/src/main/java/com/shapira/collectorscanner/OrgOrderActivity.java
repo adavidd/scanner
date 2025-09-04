@@ -48,6 +48,7 @@ import com.shapira.collectorscanner.model.UpdateItem;
 import com.shapira.collectorscanner.model.orgorder.OrgOrder;
 import com.shapira.collectorscanner.model.orgorder.OrgOrderItemsItem;
 import com.shapira.collectorscanner.server.RequestManager;
+import com.shapira.collectorscanner.utility.BarcodeString;
 import com.shapira.collectorscanner.utility.Device;
 
 import java.util.List;
@@ -64,6 +65,7 @@ public class OrgOrderActivity extends AppCompatActivity implements HandScanDialo
     private Ringtone successBeep;
     private Ringtone wrongBeep;
     private Ringtone buzzerBeep;
+    BarcodeString barcodeString = new BarcodeString();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,6 +162,10 @@ public class OrgOrderActivity extends AppCompatActivity implements HandScanDialo
             LottieAlertDialog getOrdersListProgressDialog = alert.build();
             getOrdersListProgressDialog.show();
 
+        });
+        binding.MAProgressBar.setOnProgressChangeListener(progress -> {
+            binding.MAProgressBarTextTV.setText(((int) Math.round(progress)) + "%");
+            return null;
         });
         initOrderItemsRecyclerView();
         initCameraScanner();
@@ -297,16 +303,14 @@ public class OrgOrderActivity extends AppCompatActivity implements HandScanDialo
     String barcodeStr = "";
     private void initScannerReceiver() {
         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            @SuppressLint("SuspiciousIndentation")
             @Override
             public void onReceive(Context context, Intent intent) {
-                byte[] barocode = intent.getByteArrayExtra("barocode");
-                int barocodelen = intent.getIntExtra("length", 0);
-                byte temp = intent.getByteExtra("barcodeType", (byte) 0);
-                android.util.Log.i("debug", "----codetype--" + temp);
 
-                barcodeStr = new String(barocode, 0, barocodelen);
+                String barcode = barcodeString.getBarcodeFromIntent(context,intent);
 
-                    checkIfBarcodeExist(barcodeStr);
+
+                checkIfBarcodeExist(barcode);
 
             }
         };
@@ -314,8 +318,8 @@ public class OrgOrderActivity extends AppCompatActivity implements HandScanDialo
             @Override
             public void onReceive(Context context, Intent intent) {
 
-
-                    checkIfBarcodeExist(barcodeStr);
+                String barcode = barcodeString.getBarcodeFromIntent(context,intent);
+                    checkIfBarcodeExist(barcode);
 
             }
         };
@@ -349,7 +353,7 @@ public class OrgOrderActivity extends AppCompatActivity implements HandScanDialo
                         if (mOrgOrder.getOrderItems().get(i).getOrderQuantity() <= mOrgOrder.getOrderItems().get(i).getCollectedQuantity()) {
                             blink(Color.RED);
                             vibrate(2000);
-
+                            wrongBeep.play();
                         } else {
                             mOrgOrder.getOrderItems().get(i).setCollectedQuantity(mOrgOrder.getOrderItems().get(i).getCollectedQuantity() + 1);
                             mOrgOrderItemListAdapter.notifyDataSetChanged();
@@ -368,7 +372,7 @@ public class OrgOrderActivity extends AppCompatActivity implements HandScanDialo
                             setCircleProgressBar();
                             UpdateServer(mOrgOrder.getOrderItems().get(i));
                             blink(Color.GREEN);
-
+                            successBeep.play();
                         }
                         break;
                     }else{
@@ -383,6 +387,7 @@ public class OrgOrderActivity extends AppCompatActivity implements HandScanDialo
                 //Toast.makeText(this,barcodeStr,Toast.LENGTH_SHORT);
                 Toast.makeText(this,origBarcodeStr,Toast.LENGTH_SHORT);
                 vibrate(500);
+
             }
         }
         return itemMatched;
